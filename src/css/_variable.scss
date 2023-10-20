@@ -1,0 +1,43 @@
+/*
+	Font
+-------------------------------*/
+
+$body-font: 'Montserrat', sans-serif;
+$body-font: 'Crimson Text', serif;
+$light: 300;
+$regular: 400;
+$medium: 500;
+$semi-bold: 600;
+$bold: 700;
+$extra-bold: 800;
+$black-bold: 900;
+
+/*
+	Color
+-------------------------------*/
+
+$dark: #666666;
+$white: #ffffff;
+$primary: #2ea3f2;
+$gray: #666666;
+
+/*
+	Responsive Screen
+-------------------------------*/
+
+$screen: (
+	xss: 320px,
+	xs: 375px,
+	sm: 480px,
+	2sm: 568px,
+	md: 667px,
+	2md: 736px,
+	lg: 768px,
+	tab: 800px,
+	x: 812px,
+	xl: 980px,
+	xll: 981px,
+	xx: 1024px,
+	xxl: 1200px,
+	2xxl: 1920px
+);

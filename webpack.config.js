@@ -33,7 +33,7 @@ module.exports = {
       },
       // for images
       {
-        test: /\.(png|jpg)$/i,
+        test: /\.(png|jpg|gif)$/i,
         type: 'asset/resource',
         use: [{
           loader: 'image-webpack-loader',

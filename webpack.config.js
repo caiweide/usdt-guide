@@ -32,25 +32,38 @@ module.exports = {
         use: ['html-loader'],
       },
       // for images
+      // {
+      //   test: /\.(png|jpg|gif)$/,
+      //   type: 'asset/resource',
+      //   loader: 'image-webpack-loader',
+      //   options: {
+      //     disable: true
+      //   },
+      //   generator: {
+      //     filename: `images/[name]-[hash]${timestamp}[ext]`
+      //   },
+      // },
+      // for images
       {
-        test: /\.(png|jpg|gif)$/i,
+        test: /\.(png|jpg)$/i,
         type: 'asset/resource',
         use: [{
           loader: 'image-webpack-loader',
           options: {
-            pngquant: {
-              quality: [.90, .95],
+            mozjpeg: {
+              quality: 100,
             },
+            // pngquant: {
+            //   quality: [.90, .95],
+            // },
           }
         }],
-        parser: {
-          dataUrlCondition: {
-            maxSize: 10 * 1024 // 10kb
-          }
-        },
+        // parser: {
+        //   dataUrlCondition: {
+        //     maxSize: 10 * 1024 // 10kb
+        //   }
+        // },
         generator: {
-          // filename: 'images/[name]-[hash][ext]'
-          // file name is original name with hash with timestamp and extension
           filename: `images/[name]-[hash]${timestamp}[ext]`
         }
       },

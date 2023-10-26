@@ -51,7 +51,7 @@ module.exports = {
           loader: 'image-webpack-loader',
           options: {
             mozjpeg: {
-              quality: 100,
+              quality: 85,
             },
             // pngquant: {
             //   quality: [.90, .95],

@@ -145,7 +145,8 @@
   <div class="container">
     <div class="step-list">
       <div class="step step1">
-        <!-- <img class="img" src="assets/images/1.jpg" /> -->
+        <img class="img app" src="assets/images/app/1.jpg" />
+        <img class="img web" src="assets/images/web/1.jpg" />
       </div>
       <!-- <div class="step">
         <div class="video-list">
@@ -157,10 +158,12 @@
         </div>
       </div> -->
       <div class="step step2">
-        <!-- <img class="img" src="assets/images/2.jpg" /> -->
+        <img class="img app" src="assets/images/app/2.jpg" />
+        <img class="img web" src="assets/images/web/2.jpg" />
       </div>
       <div class="step step3">
-        <!-- <img class="img" src="assets/images/3.jpg" /> -->
+        <img class="img app" src="assets/images/app/3.jpg" />
+        <img class="img web" src="assets/images/web/3.jpg" />
 
         <div class="step_one_absolute_content">
           <div style="position: relative;">
@@ -198,10 +201,12 @@
         </div>
       </div>
       <div class="step step4">
-        <!-- <img class="img" src="assets/images/4.jpg" /> -->
+        <img class="img app" src="assets/images/app/4.jpg" />
+        <img class="img web" src="assets/images/web/4.jpg" />
       </div>
       <div class="step step5">
-        <!-- <img class="img" src="assets/images/5.jpg" style="width: 100%;" /> -->
+        <img class="img app" src="assets/images/app/5.jpg" style="width: 100%;" />
+        <img class="img web" src="assets/images/web/5.jpg" style="width: 100%;" />
 
         <div class="step_two_absolute_content">
           <div style="position: relative;">
@@ -236,13 +241,16 @@
         </div>
       </div>
       <div class="step step6">
-        <!-- <img class="img" src="assets/images/6.jpg" /> -->
+        <img class="img app" src="assets/images/app/6.jpg" />
+        <img class="img web" src="assets/images/web/6.jpg" />
       </div>
       <div class="step step7">
-        <!-- <img class="img" src="assets/images/7.jpg" /> -->
+        <img class="img app" src="assets/images/app/7.jpg" />
+        <img class="img web" src="assets/images/web/7.jpg" />
       </div>
       <div class="step step8">
-        <!-- <img class="img" src="assets/images/8.jpg" /> -->
+        <img class="img app" src="assets/images/app/8.jpg" />
+        <img class="img web" src="assets/images/web/8.jpg" />
       </div>
     </div>
   </div>
@@ -297,22 +305,26 @@
 <script type="text/javascript">
   const urlParams = new URLSearchParams(window.location.search);
   const displayInApp = urlParams.get('displayInApp');
+  const isApp = displayInApp === 'true';
 
-  const imageBasePath = 'assets/images';
-  const imagePath = displayInApp == 'true' ? `${imageBasePath}/app` : `${imageBasePath}/web`;
+  const appElements = Array.from(document.querySelectorAll('.app'));
+  const webElements = Array.from(document.querySelectorAll('.web'));
 
-  // const stepList = document.querySelector('.step-list');
-  const imageCount = 8;
+  if (isApp) {
+    webElements.forEach((element) => {
+      element.style.display = 'none';
+    });
+    appElements.forEach((element) => {
+      element.style.display = 'block';
+    });
 
-  for (let i = 1; i <= imageCount; i++) {
-    const step = document.createElement('img');
-    step.classList.add('step');
-    step.classList.add(`step${i}`);
-    step.src = `${imagePath}/${i}.jpg`;
-    // stepList.appendChild(step);
-    // step list -> step1 -> img
-    document.querySelector(`.step-list .step${i}`).appendChild(step);
-
+  } else {
+    appElements.forEach((element) => {
+      element.style.display = 'none';
+    });
+    webElements.forEach((element) => {
+      element.style.display = 'block';
+    });
   }
 
 </script>

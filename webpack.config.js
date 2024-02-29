@@ -47,17 +47,17 @@ module.exports = {
       {
         test: /\.(png|jpg)$/i,
         type: 'asset/resource',
-        use: [{
-          loader: 'image-webpack-loader',
-          options: {
-            mozjpeg: {
-              quality: 85,
-            },
-            // pngquant: {
-            //   quality: [.90, .95],
-            // },
-          }
-        }],
+        // use: [{
+        //   loader: 'image-webpack-loader',
+        //   options: {
+        //     mozjpeg: {
+        //       quality: 85,
+        //     },
+        //     // pngquant: {
+        //     //   quality: [.90, .95],
+        //     // },
+        //   }
+        // }],
         // parser: {
         //   dataUrlCondition: {
         //     maxSize: 10 * 1024 // 10kb

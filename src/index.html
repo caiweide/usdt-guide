@@ -302,9 +302,14 @@
       window.flutter.call.name === 'jumpTo'
     ) {
       window.flutter.call('jumpTo', { "url": `app://web?target=1&url=${url}` }, null);
-    } else {
+    } else if (
+      window.flutter &&
+      typeof window.flutter.call === 'function'
+    ) {
       let openUrl = `app://web?target=1&url=${url}`;
       window.open(openUrl, '_blank');
+    } else {
+      window.open(url, '_blank');
     }
   }
 

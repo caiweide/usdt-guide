@@ -275,48 +275,6 @@
   }
   ready(fn);
 
-  const videos = Array.from(document.querySelectorAll("video"));
-
-  const handlePlayVideo = (e) => {
-    const video = e.target;
-    const controls = video.controls;
-    if (!controls) {
-      video.controls = true;
-      // disable picture in picture mode
-      video.disablePictureInPicture = true;
-      // set attribute controlList = noDownload
-      video.setAttribute("controlsList", "nodownload");
-      video.play();
-    }
-  };
-
-  videos.forEach((video) => {
-    video.addEventListener("click", handlePlayVideo);
-  });
-
-  function openWebBrowser(url) {
-    console.log("🔥🔥 URL 🔥🔥", url);
-    if (
-      window.flutter &&
-      typeof window.flutter.call === 'function' &&
-      window.flutter.call.name === 'jumpTo'
-    ) {
-      window.flutter.call('jumpTo', { "url": `app://web?target=1&url=${url}` }, null);
-    } else if (
-      window.flutter &&
-      typeof window.flutter.call === 'function'
-    ) {
-      let openUrl = `app://web?target=1&url=${url}`;
-      window.open(openUrl, '_blank');
-    } else {
-      window.open(url, '_blank');
-    }
-  }
-
-
-</script>
-
-<script type="text/javascript">
   const urlParams = new URLSearchParams(window.location.search);
   const displayInApp = urlParams.get('displayInApp');
   const isApp = displayInApp === 'true';
@@ -339,6 +297,21 @@
     webElements.forEach((element) => {
       element.style.display = 'block';
     });
+  }
+
+  function openWebBrowser(url) {
+    console.log("🔥🔥 URL 🔥🔥", url);
+    if (isApp) {
+      window.flutter.call('jumpTo', { "url": `app://web?target=1&url=${url}` }, null);
+    } else if (
+      window.flutter &&
+      typeof window.flutter.call === 'function'
+    ) {
+      let openUrl = `app://web?target=1&url=${url}`;
+      window.open(openUrl, '_blank');
+    } else {
+      window.open(url, '_blank');
+    }
   }
 
 </script>

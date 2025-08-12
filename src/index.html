@@ -296,7 +296,11 @@
 
   function openWebBrowser(url) {
     console.log("🔥🔥 URL 🔥🔥", url);
-    window?.flutter?.call('jumpTo', { "url": `app://web?target=1&url=${url}` }, null);
+    if (window.flutter && typeof window.flutter.call === 'function') {
+      window.flutter.call('jumpTo', { "url": `app://web?target=1&url=${url}` }, null);
+    } else {
+      window.open(url, '_blank');
+    }
   }
 
 

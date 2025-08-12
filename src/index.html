@@ -307,7 +307,8 @@
       window.flutter &&
       typeof window.flutter.call === 'function'
     ) {
-      let openUrl = `app://web?target=1&url=${url}`;
+      const getUrl = encodeURIComponent(new URL(url).toString())
+      let openUrl = `app://web?target=1&url=${getUrl}`;
       window.open(openUrl, '_blank');
     } else {
       window.open(url, '_blank');

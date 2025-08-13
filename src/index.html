@@ -290,11 +290,8 @@
       function openWebBrowser(url) {
         if (!url) return;
 
-        console.log("🔥🔥 URL 🔥🔥", url);
-
         try {
           if (isApp) {
-            console.log("🔥🔥 isApp 🔥🔥", isApp);
             window.flutter?.call('jumpTo', {
               url: `app://web?target=1&url=${encodeURIComponent(url)}`
             }, null);

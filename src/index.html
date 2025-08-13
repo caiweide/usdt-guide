@@ -292,15 +292,18 @@
   function openWebBrowser(url) {
     console.log("🔥🔥 URL 🔥🔥", url);
     if (isApp) {
+      console.log("🔥🔥 isApp 🔥🔥", isApp);
       window.flutter.call('jumpTo', { "url": `app://web?target=1&url=${url}` }, null);
     } else if (
       window.flutter &&
       typeof window.flutter.call === 'function'
     ) {
+      console.log('🔥🔥 window.flutter 🔥🔥', window.flutter);
       const getUrl = encodeURIComponent(new URL(url).toString())
       let openUrl = `app://web?target=1&url=${getUrl}`;
       window.open(openUrl, '_blank');
     } else {
+      console.log("🔥🔥 API 🔥🔥", url);
       window.open(url, '_blank');
     }
   }

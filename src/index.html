@@ -296,7 +296,7 @@
       console.log("🔥🔥 isApp 🔥🔥", isApp);
       window.flutter.call('jumpTo', { "url": `app://web?target=1&url=${url}` }, null);
     } else if (
-      window.flutter
+      window.flutter || window.AppSDK
     ) {
       console.log('🔥🔥 window.flutter 🔥🔥', window.flutter);
       const getUrl = encodeURIComponent(new URL(url).toString())

@@ -138,11 +138,30 @@
       flex-direction: column;
       justify-content: center;
     }
+
+    /* Loading state styles */
+    .container.loading {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .container.loaded {
+      opacity: 1;
+    }
+
+    /* Click feedback */
+    .button-action {
+      transition: transform 0.1s ease;
+    }
+
+    .button-action:active {
+      transform: scale(0.95);
+    }
   </style>
 </head>
 
 <body>
-  <div class="container">
+  <div class="container loading">
     <div class="step-list">
       <div class="step step1">
         <img class="img app" src="assets/images/app/1.jpg" />
@@ -166,22 +185,19 @@
               </div>
               <div style="display: flex; margin: 3%; margin-top: 0;">
                 <div style="flex: 1; text-align: center; margin-right: 8px;">
-                  <a href="javascript:openWebBrowser('https://www.huobi.com/support/zh-cn/detail/44877723881747')"
-                    class="button-action">
+                  <a href="#" data-url="https://www.huobi.com/support/zh-cn/detail/44877723881747" class="button-action">
                     <img src="assets/images/huobi_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
                     <img src="assets/images/button_click.gif" style="width: 80%;" />
                   </a>
                 </div>
                 <div style="flex: 1; text-align: center; margin-right: 8px;">
-                  <a href="javascript:openWebBrowser('https://www.binance.com/zh-TC/support/faq/如何在幣安-c2c-網站買入加密貨幣-360043832851')"
-                    class="button-action">
+                  <a href="#" data-url="https://www.binance.com/zh-TC/support/faq/如何在幣安-c2c-網站買入加密貨幣-360043832851" class="button-action">
                     <img src="assets/images/binance_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
                     <img src="assets/images/button_click.gif" style="width: 80%;" />
                   </a>
                 </div>
                 <div style="flex: 1; text-align: center;">
-                  <a href="javascript:openWebBrowser('https://www.okx.com/cn/learn/how-to-buy-and-sell-on-okx-c2c')"
-                    class="button-action">
+                  <a href="#" data-url="https://www.okx.com/cn/learn/how-to-buy-and-sell-on-okx-c2c" class="button-action">
                     <img src="assets/images/okx_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
                     <img src="assets/images/button_click.gif" style="width: 80%;" />
                   </a>
@@ -206,22 +222,19 @@
             <div class="step_two_absolute_child_content">
               <div class="cover_child">
                 <div class="row">
-                  <a href="javascript:openWebBrowser('https://www.huobi.com.gt/support/zh-cn/detail/34893278495346?invite_code=xb6z7223&inviter_id=11353960')"
-                    style="width: 62%; padding-top: 5px;">
+                  <a href="#" data-url="https://www.huobi.com.gt/support/zh-cn/detail/34893278495346?invite_code=xb6z7223&inviter_id=11353960" style="width: 62%; padding-top: 5px;" class="button-action">
                     <img src="assets/images/huobi_title.png" style="width: 100%;" />
                     <img src="assets/images/button_click.gif" style="width: 100%;" />
                   </a>
                 </div>
                 <div class="row">
-                  <a href="javascript:openWebBrowser('https://www.binance.com/zh-TC/support/faq/充值与提币新手指引-85a1c394ac1d489fb0bfac0ef2fceafd')"
-                    style="width: 62%; padding-top: 5px;">
+                  <a href="#" data-url="https://www.binance.com/zh-TC/support/faq/充值与提币新手指引-85a1c394ac1d489fb0bfac0ef2fceafd" style="width: 62%; padding-top: 5px;" class="button-action">
                     <img src="assets/images/binance_title.png" style="width: 100%;" />
                     <img src="assets/images/button_click.gif" style="width: 100%;" />
                   </a>
                 </div>
                 <div class="row">
-                  <a href="javascript:openWebBrowser('https://www.okx.com/cn/learn/extract-crypto-assets-app')"
-                    style="width: 62%; padding-top: 5px;">
+                  <a href="#" data-url="https://www.okx.com/cn/learn/extract-crypto-assets-app" style="width: 62%; padding-top: 5px;" class="button-action">
                     <img src="assets/images/okx_title.png" style="width: 100%;" />
                     <img src="assets/images/button_click.gif" style="width: 100%;" />
                   </a>
@@ -245,71 +258,160 @@
       </div>
     </div>
   </div>
+
+  <script type="text/javascript">
+    (function() {
+      // Cache configuration and DOM elements
+      const urlParams = new URLSearchParams(window.location.search);
+      const isApp = urlParams.get('displayInApp') === 'true';
+      const container = document.querySelector('.container');
+
+      let loadedCount = 0;
+      let totalImages = 0;
+      let loadingFinished = false;
+
+      // Optimized message sender with debouncing
+      const sendLoadingState = (function() {
+        let timeoutId;
+        return function(loading) {
+          if (loadingFinished && loading) return;
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => {
+            window.parent?.postMessage({
+              title: '波币钱包快速赚钱指南',
+              loading: loading
+            }, '*');
+            if (!loading) loadingFinished = true;
+          }, 0);
+        };
+      })();
+
+      // Handle URL opening with proper error handling
+      function openWebBrowser(url) {
+        if (!url) return;
+
+        console.log("🔥🔥 URL 🔥🔥", url);
+
+        try {
+          if (isApp) {
+            console.log("🔥🔥 isApp 🔥🔥", isApp);
+            window.flutter?.call('jumpTo', {
+              url: `app://web?target=1&url=${encodeURIComponent(url)}`
+            }, null);
+          } else {
+            window.parent?.postMessage({
+              type: 'OPEN_URL',
+              url: url
+            }, '*');
+          }
+        } catch (error) {
+          console.error('Error opening URL:', error);
+          // Fallback to window.open
+          window.open(url, '_blank');
+        }
+      }
+
+      // Optimized click handler with event delegation
+      function setupClickHandlers() {
+        container.addEventListener('click', function(e) {
+          const link = e.target.closest('a[data-url]');
+          if (link) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const url = link.getAttribute('data-url');
+            if (url) {
+              // Add visual feedback
+              link.style.transform = 'scale(0.95)';
+              setTimeout(() => {
+                link.style.transform = '';
+              }, 100);
+
+              openWebBrowser(url);
+            }
+          }
+        }, { passive: false });
+      }
+
+      // Image loading handler
+      function handleImageLoad() {
+        if (++loadedCount === totalImages && !loadingFinished) {
+          container.classList.remove('loading');
+          container.classList.add('loaded');
+          sendLoadingState(false);
+        }
+      }
+
+      // Setup display mode and count images
+      function initialize() {
+        // Cache element collections
+        const appElements = container.querySelectorAll('.app');
+        const webElements = container.querySelectorAll('.web');
+        const allImages = container.querySelectorAll('img');
+
+        // Setup display mode
+        if (isApp) {
+          webElements.forEach(el => el.style.display = 'none');
+          appElements.forEach(el => el.style.display = 'block');
+          totalImages = container.querySelectorAll('.app').length;
+        } else {
+          appElements.forEach(el => el.style.display = 'none');
+          webElements.forEach(el => el.style.display = 'block');
+          totalImages = container.querySelectorAll('.web').length;
+        }
+
+        // Count all images (including overlay images)
+        totalImages = allImages.length;
+
+        // Send initial loading state
+        sendLoadingState(true);
+
+        // Handle case with no images
+        if (totalImages === 0) {
+          container.classList.remove('loading');
+          container.classList.add('loaded');
+          sendLoadingState(false);
+          return;
+        }
+
+        // Setup image loading listeners
+        allImages.forEach(img => {
+          if (img.complete && img.naturalHeight !== 0) {
+            handleImageLoad();
+          } else {
+            img.addEventListener('load', handleImageLoad, { once: true });
+            img.addEventListener('error', handleImageLoad, { once: true });
+          }
+        });
+
+        // Setup click handlers
+        setupClickHandlers();
+      }
+
+      // Container animation with proper timing
+      function showContainer() {
+        container.style.display = 'none';
+        setTimeout(() => {
+          container.style.display = 'block';
+          // Use CSS transition instead of animation for smoother performance
+          if (loadingFinished) {
+            container.classList.add('loaded');
+          }
+        }, 400);
+      }
+
+      // Initialize everything
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          initialize();
+          showContainer();
+        }, { once: true });
+      } else {
+        initialize();
+        showContainer();
+      }
+    })();
+  </script>
 </body>
-
-<script type="text/javascript">
-  function ready(fn) {
-    if (document.readyState != 'loading') {
-      fn();
-    } else {
-      document.addEventListener('DOMContentLoaded', fn);
-    }
-  }
-
-  function fn() {
-    document.querySelector('.container').style.display = 'none';
-    setTimeout(function () {
-      // fade in container with animation duration 1s
-      document.querySelector('.container').style.display = 'block';
-      document.querySelector('.container').style.animation = 'fadeIn 1s';
-    }, 400);
-  }
-  ready(fn);
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const displayInApp = urlParams.get('displayInApp');
-  const isApp = displayInApp === 'true';
-
-  const appElements = Array.from(document.querySelectorAll('.app'));
-  const webElements = Array.from(document.querySelectorAll('.web'));
-
-  if (isApp) {
-    webElements.forEach((element) => {
-      element.style.display = 'none';
-    });
-    appElements.forEach((element) => {
-      element.style.display = 'block';
-    });
-
-  } else {
-    appElements.forEach((element) => {
-      element.style.display = 'none';
-    });
-    webElements.forEach((element) => {
-      element.style.display = 'block';
-    });
-  }
-
-  function openWebBrowser(url) {
-    console.log("🔥🔥 URL 🔥🔥", url);
-
-    let urlTest = 'app://web?target=1&url=https%3A%2F%2Ffaq-blond.vercel.app%3Fshow_menu%3D2'
-    window?.open(urlTest, '_blank');
-
-    // if (isApp) {
-    //   console.log("🔥🔥 isApp 🔥🔥", isApp);
-    //   window?.flutter?.call('jumpTo', { "url": `app://web?target=1&url=${url}` }, null);
-    // } else if (window?.flutter || window?.AppSDK) {
-    //   console.log('🔥🔥 window.flutter 🔥🔥', window.flutter);
-    //   const getUrl = encodeURIComponent(new URL(url).toString())
-    //   let openUrl = `app://web?target=1&url=${getUrl}`;
-    //   window?.open(openUrl, '_blank');
-    // } else {
-    //   console.log("🔥🔥 API 🔥🔥", url);
-    //   window?.open(url, '_blank');
-    // }
-  }
-
-</script>
 
 </html>

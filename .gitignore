@@ -24,7 +24,6 @@ node_modules/*
 package-lock.json
 
 usdt-guide
-usdt-guide-*.zip
 
 **/node_modules
 **/dist

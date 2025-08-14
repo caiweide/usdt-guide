@@ -45,7 +45,7 @@ module.exports = {
       // },
       // for images
       {
-        test: /\.(png|jpg)$/i,
+        test: /\.(png|jpg|webp)$/i,
         type: 'asset/resource',
         // use: [{
         //   loader: 'image-webpack-loader',

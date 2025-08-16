@@ -353,13 +353,16 @@
           loadedCount++;
           currentLoadingIndex++;
 
-          if (loadedCount === totalImages && !loadingFinished) {
+          // Show content after first image loads
+          if (loadedCount === 1) {
             container.classList.remove('loading');
             container.classList.add('loaded');
             sendLoadingState(false);
-          } else {
-            // Load next image with small delay
-            setTimeout(loadNextImage, 50);
+          }
+
+          // Continue loading remaining images immediately
+          if (currentLoadingIndex < imageQueue.length) {
+            loadNextImage();
           }
         };
 
@@ -367,13 +370,16 @@
           loadedCount++;
           currentLoadingIndex++;
 
-          if (loadedCount === totalImages && !loadingFinished) {
+          // Show content after first image attempt (even if failed)
+          if (loadedCount === 1) {
             container.classList.remove('loading');
             container.classList.add('loaded');
             sendLoadingState(false);
-          } else {
-            // Load next image even if current failed
-            setTimeout(loadNextImage, 50);
+          }
+
+          // Continue loading remaining images immediately
+          if (currentLoadingIndex < imageQueue.length) {
+            loadNextImage();
           }
         };
 
@@ -396,14 +402,21 @@
           webElements.forEach(el => el.style.display = 'block');
         }
 
-        // Build image queue for sequential loading
+        // Build image queue for sequential loading - prioritize main step images
+        const mainImages = [];
+        const overlayImages = [];
+
         allImages.forEach(img => {
           if ((isApp && img.classList.contains('app')) ||
-              (!isApp && img.classList.contains('web')) ||
-              (!img.classList.contains('app') && !img.classList.contains('web'))) {
-            imageQueue.push(img);
+              (!isApp && img.classList.contains('web'))) {
+            mainImages.push(img);
+          } else if (!img.classList.contains('app') && !img.classList.contains('web')) {
+            overlayImages.push(img);
           }
         });
+
+        // Load main step images first, then overlay images
+        imageQueue = [...mainImages, ...overlayImages];
 
         totalImages = imageQueue.length;
 

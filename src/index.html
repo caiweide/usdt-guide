@@ -45,6 +45,12 @@
       display: flex;
       width: 100%;
       height: auto;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .container .step-list .step.loaded {
+      opacity: 1;
     }
 
     .container .step-list .step .img {
@@ -55,12 +61,6 @@
     .container .step-list .step a {
       outline: none;
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-      transition: transform 0.15s ease;
-      display: block;
-    }
-
-    .container .step-list .step a:active {
-      transform: scale(0.95);
     }
 
     .container .step-list .step .video-list {
@@ -145,94 +145,113 @@
       justify-content: center;
     }
 
-    /* Loading animation */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    /* Loading indicator */
+    .loading-indicator {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 16px;
+      color: #666;
+      z-index: 1000;
     }
 
-    /* Click feedback animation */
+    .loading-progress {
+      width: 200px;
+      height: 4px;
+      background: #f0f0f0;
+      border-radius: 2px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    .loading-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #4CAF50, #81C784);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Click feedback */
     .button-action {
-      cursor: pointer;
-      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.1s ease;
     }
 
     .button-action:active {
       transform: scale(0.95);
     }
 
-    /* Improved button styles */
-    .clickable-button {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .clickable-button::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: width 0.3s, height 0.3s;
-    }
-
-    .clickable-button:active::after {
-      width: 200px;
+    /* Skeleton loader for better UX */
+    .step-skeleton {
+      width: 100%;
       height: 200px;
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 2s infinite;
+    }
+
+    @keyframes skeleton-loading {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div class="loading-indicator">
+    <div>加载中... <span id="progress-text">0%</span></div>
+    <div class="loading-progress">
+      <div class="loading-bar" id="progress-bar"></div>
+    </div>
+  </div>
+
   <div class="container">
     <div class="step-list">
-      <div class="step step1">
-        <img class="img app" src="assets/images/app/1.jpg" />
-        <img class="img web" src="assets/images/web/1.jpg" />
+      <div class="step step1" data-step="1">
+        <div class="step-skeleton"></div>
+        <img class="img app" data-src="assets/images/app/1.jpg" style="display: none;" />
+        <img class="img web" data-src="assets/images/web/1.jpg" style="display: none;" />
       </div>
-      <div class="step step2">
-        <img class="img app" src="assets/images/app/2.jpg" />
-        <img class="img web" src="assets/images/web/2.jpg" />
+      <div class="step step2" data-step="2">
+        <div class="step-skeleton"></div>
+        <img class="img app" data-src="assets/images/app/2.jpg" style="display: none;" />
+        <img class="img web" data-src="assets/images/web/2.jpg" style="display: none;" />
       </div>
-      <div class="step step3">
-        <img class="img app" src="assets/images/app/3.jpg" />
-        <img class="img web" src="assets/images/web/3.jpg" />
+      <div class="step step3" data-step="3">
+        <div class="step-skeleton"></div>
+        <img class="img app" data-src="assets/images/app/3.jpg" style="display: none;" />
+        <img class="img web" data-src="assets/images/web/3.jpg" style="display: none;" />
 
         <div class="step_one_absolute_content">
           <div style="position: relative;">
-            <img src="assets/images/rectangle_1.png" style="width: 100%;" />
+            <img data-src="assets/images/rectangle_1.png" style="width: 100%;" />
 
             <div class="step_one_absolute_child_content">
               <div class="usdt-title">
-                <img src="assets/images/usdt_title.png" style="width: 50%; margin: 3%; margin-bottom: 0;" />
+                <img data-src="assets/images/usdt_title.png" style="width: 50%; margin: 3%; margin-bottom: 0;" />
               </div>
               <div style="display: flex; margin: 3%; margin-top: 0;">
                 <div style="flex: 1; text-align: center; margin-right: 8px;">
-                  <a href="javascript:void(0)"
-                     onclick="openWebBrowser('https://www.huobi.com/support/zh-cn/detail/44877723881747')"
-                     class="button-action clickable-button">
-                    <img src="assets/images/huobi_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
-                    <img src="assets/images/button_click.gif" style="width: 80%;" />
+                  <a href="#" data-url="https://www.huobi.com/support/zh-cn/detail/44877723881747" class="button-action">
+                    <img data-src="assets/images/huobi_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
+                    <img data-src="assets/images/button_click.gif" style="width: 80%;" />
                   </a>
                 </div>
                 <div style="flex: 1; text-align: center; margin-right: 8px;">
-                  <a href="javascript:void(0)"
-                     onclick="openWebBrowser('https://www.binance.com/zh-TC/support/faq/如何在幣安-c2c-網站買入加密貨幣-360043832851')"
-                     class="button-action clickable-button">
-                    <img src="assets/images/binance_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
-                    <img src="assets/images/button_click.gif" style="width: 80%;" />
+                  <a href="#" data-url="https://www.binance.com/zh-TC/support/faq/如何在幣安-c2c-網站買入加密貨幣-360043832851" class="button-action">
+                    <img data-src="assets/images/binance_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
+                    <img data-src="assets/images/button_click.gif" style="width: 80%;" />
                   </a>
                 </div>
                 <div style="flex: 1; text-align: center;">
-                  <a href="javascript:void(0)"
-                     onclick="openWebBrowser('https://www.okx.com/cn/learn/how-to-buy-and-sell-on-okx-c2c')"
-                     class="button-action clickable-button">
-                    <img src="assets/images/okx_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
-                    <img src="assets/images/button_click.gif" style="width: 80%;" />
+                  <a href="#" data-url="https://www.okx.com/cn/learn/how-to-buy-and-sell-on-okx-c2c" class="button-action">
+                    <img data-src="assets/images/okx_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
+                    <img data-src="assets/images/button_click.gif" style="width: 80%;" />
                   </a>
                 </div>
               </div>
@@ -240,45 +259,38 @@
           </div>
         </div>
       </div>
-      <div class="step step4">
-        <img class="img app" src="assets/images/app/4.jpg" />
-        <img class="img web" src="assets/images/web/4.jpg" />
+      <div class="step step4" data-step="4">
+        <div class="step-skeleton"></div>
+        <img class="img app" data-src="assets/images/app/4.jpg" style="display: none;" />
+        <img class="img web" data-src="assets/images/web/4.jpg" style="display: none;" />
       </div>
-      <div class="step step5">
-        <img class="img app" src="assets/images/app/5.jpg" style="width: 100%;" />
-        <img class="img web" src="assets/images/web/5.jpg" style="width: 100%;" />
+      <div class="step step5" data-step="5">
+        <div class="step-skeleton"></div>
+        <img class="img app" data-src="assets/images/app/5.jpg" style="width: 100%; display: none;" />
+        <img class="img web" data-src="assets/images/web/5.jpg" style="width: 100%; display: none;" />
 
         <div class="step_two_absolute_content">
           <div style="position: relative;">
-            <img src="assets/images/rectangle_2.png" style="width: 100%;" />
+            <img data-src="assets/images/rectangle_2.png" style="width: 100%;" />
 
             <div class="step_two_absolute_child_content">
               <div class="cover_child">
                 <div class="row">
-                  <a href="javascript:void(0)"
-                     onclick="openWebBrowser('https://www.huobi.com.gt/support/zh-cn/detail/34893278495346?invite_code=xb6z7223&inviter_id=11353960')"
-                     style="width: 62%; padding-top: 5px;"
-                     class="button-action clickable-button">
-                    <img src="assets/images/huobi_title.png" style="width: 100%;" />
-                    <img src="assets/images/button_click.gif" style="width: 100%;" />
+                  <a href="#" data-url="https://www.huobi.com.gt/support/zh-cn/detail/34893278495346?invite_code=xb6z7223&inviter_id=11353960" style="width: 62%; padding-top: 5px;" class="button-action">
+                    <img data-src="assets/images/huobi_title.png" style="width: 100%;" />
+                    <img data-src="assets/images/button_click.gif" style="width: 100%;" />
                   </a>
                 </div>
                 <div class="row">
-                  <a href="javascript:void(0)"
-                     onclick="openWebBrowser('https://www.binance.com/zh-TC/support/faq/充值与提币新手指引-85a1c394ac1d489fb0bfac0ef2fceafd')"
-                     style="width: 62%; padding-top: 5px;"
-                     class="button-action clickable-button">
-                    <img src="assets/images/binance_title.png" style="width: 100%;" />
-                    <img src="assets/images/button_click.gif" style="width: 100%;" />
+                  <a href="#" data-url="https://www.binance.com/zh-TC/support/faq/充值与提币新手指引-85a1c394ac1d489fb0bfac0ef2fceafd" style="width: 62%; padding-top: 5px;" class="button-action">
+                    <img data-src="assets/images/binance_title.png" style="width: 100%;" />
+                    <img data-src="assets/images/button_click.gif" style="width: 100%;" />
                   </a>
                 </div>
                 <div class="row">
-                  <a href="javascript:void(0)"
-                     onclick="openWebBrowser('https://www.okx.com/cn/learn/extract-crypto-assets-app')"
-                     style="width: 62%; padding-top: 5px;"
-                     class="button-action clickable-button">
-                    <img src="assets/images/okx_title.png" style="width: 100%;" />
-                    <img src="assets/images/button_click.gif" style="width: 100%;" />
+                  <a href="#" data-url="https://www.okx.com/cn/learn/extract-crypto-assets-app" style="width: 62%; padding-top: 5px;" class="button-action">
+                    <img data-src="assets/images/okx_title.png" style="width: 100%;" />
+                    <img data-src="assets/images/button_click.gif" style="width: 100%;" />
                   </a>
                 </div>
               </div>
@@ -286,203 +298,214 @@
           </div>
         </div>
       </div>
-      <div class="step step6">
-        <img class="img app" src="assets/images/app/6.jpg" />
-        <img class="img web" src="assets/images/web/6.jpg" />
+      <div class="step step6" data-step="6">
+        <div class="step-skeleton"></div>
+        <img class="img app" data-src="assets/images/app/6.jpg" style="display: none;" />
+        <img class="img web" data-src="assets/images/web/6.jpg" style="display: none;" />
       </div>
-      <div class="step step7">
-        <img class="img app" src="assets/images/app/7.jpg" />
-        <img class="img web" src="assets/images/web/7.jpg" />
+      <div class="step step7" data-step="7">
+        <div class="step-skeleton"></div>
+        <img class="img app" data-src="assets/images/app/7.jpg" style="display: none;" />
+        <img class="img web" data-src="assets/images/web/7.jpg" style="display: none;" />
       </div>
-      <div class="step step8">
-        <img class="img app" src="assets/images/app/8.jpg" />
-        <img class="img web" src="assets/images/web/8.jpg" />
+      <div class="step step8" data-step="8">
+        <div class="step-skeleton"></div>
+        <img class="img app" data-src="assets/images/app/8.jpg" style="display: none;" />
+        <img class="img web" data-src="assets/images/web/8.jpg" style="display: none;" />
       </div>
     </div>
   </div>
-</body>
 
-<script type="text/javascript">
-  // Optimized ready function
-  function ready(fn) {
-    if (document.readyState !== 'loading') {
-      fn();
-    } else {
-      document.addEventListener('DOMContentLoaded', fn, { once: true });
-    }
-  }
+  <script type="text/javascript">
+    (function() {
+      // Cache configuration and DOM elements
+      const urlParams = new URLSearchParams(window.location.search);
+      const isApp = urlParams.get('displayInApp') === 'true';
+      const container = document.querySelector('.container');
+      const loadingIndicator = document.querySelector('.loading-indicator');
+      const progressBar = document.getElementById('progress-bar');
+      const progressText = document.getElementById('progress-text');
 
-  // Initialize display with better performance
-  function initializeDisplay() {
-    const container = document.querySelector('.container');
-    container.style.display = 'none';
+      let currentStep = 0;
+      let totalSteps = 8;
+      let loadingFinished = false;
 
-    // Use requestAnimationFrame for smoother animation
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        container.style.display = 'block';
-        container.style.animation = 'fadeIn 1s ease-out';
-      }, 400);
-    });
-  }
-
-  ready(initializeDisplay);
-
-  // Configuration and setup
-  const urlParams = new URLSearchParams(window.location.search);
-  const displayInApp = urlParams.get('displayInApp');
-  const isApp = displayInApp === 'true';
-
-  // Cache DOM elements for better performance
-  const appElements = document.querySelectorAll('.app');
-  const webElements = document.querySelectorAll('.web');
-
-  // Setup display mode efficiently
-  if (isApp) {
-    webElements.forEach(element => element.style.display = 'none');
-    appElements.forEach(element => element.style.display = 'block');
-  } else {
-    appElements.forEach(element => element.style.display = 'none');
-    webElements.forEach(element => element.style.display = 'block');
-  }
-
-  // Improved click tracking with debouncing
-  let clickTimeout;
-  const clickDebounceTime = 500; // Prevent rapid clicks
-
-  function debounceClick(fn, delay) {
-    return function(...args) {
-      if (clickTimeout) {
-        return false; // Ignore rapid clicks
-      }
-
-      clickTimeout = setTimeout(() => {
-        clickTimeout = null;
-      }, delay);
-
-      return fn.apply(this, args);
-    };
-  }
-
-  // Enhanced openWebBrowser function with better error handling and logging
-  const openWebBrowser = debounceClick(function(url) {
-    if (!url) {
-      console.warn('No URL provided to openWebBrowser');
-      return false;
-    }
-
-    console.log("🔥🔥 Opening URL 🔥🔥", url);
-
-    try {
-      // Test URL for development/testing
-      const urlTest = 'app://web?target=1&url=https%3A%2F%2Ffaq-blond.vercel.app%3Fshow_menu%3D2';
-
-      // Enhanced URL opening logic with fallbacks
-      if (isApp && window?.flutter?.call) {
-        console.log("🔥🔥 Opening in App via Flutter 🔥🔥");
-        window.flutter.call('jumpTo', {
-          url: `app://web?target=1&url=${encodeURIComponent(url)}`
-        }, null);
-        return true;
-      }
-      else if (window?.flutter) {
-        console.log('🔥🔥 Opening via Flutter/AppSDK 🔥🔥');
-        const encodedUrl = encodeURIComponent(url);
-        const openUrl = `app://web?target=1&url=${encodedUrl}`;
-        window.open(openUrl, '_blank', 'noopener,noreferrer');
-        return true;
-      }
-      else {
-        console.log("🔥🔥 Opening in browser 🔥🔥");
-        // For testing, use the test URL, otherwise use the actual URL
-        const finalUrl = url.includes('test') ? urlTest : url;
-        window.open(finalUrl, '_blank', 'noopener,noreferrer');
-        return true;
-      }
-    } catch (error) {
-      console.error('Error opening URL:', error);
-
-      // Fallback: try direct window.open
-      try {
-        window.open(url, '_blank', 'noopener,noreferrer');
-        return true;
-      } catch (fallbackError) {
-        console.error('Fallback URL opening failed:', fallbackError);
-
-        // Last resort: try postMessage to parent
-        if (window.parent && window.parent !== window) {
-          try {
-            window.parent.postMessage({
-              type: 'OPEN_URL',
-              url: url,
-              timestamp: Date.now()
+      // Optimized message sender
+      const sendLoadingState = (function() {
+        let timeoutId;
+        return function(loading, progress = 0) {
+          if (loadingFinished && loading) return;
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => {
+            window.parent?.postMessage({
+              title: '波币钱包快速赚钱指南',
+              loading: loading,
+              progress: progress
             }, '*');
-            console.log('Sent postMessage to parent window');
-            return true;
-          } catch (postMessageError) {
-            console.error('PostMessage failed:', postMessageError);
-          }
+            if (!loading) loadingFinished = true;
+          }, 0);
+        };
+      })();
+
+      // Update progress indicator
+      function updateProgress(step) {
+        const progress = Math.round((step / totalSteps) * 100);
+        progressBar.style.width = `${progress}%`;
+        progressText.textContent = `${progress}%`;
+        sendLoadingState(step < totalSteps, progress);
+      }
+
+      // Load images for a specific step
+      function loadStepImages(stepElement, callback) {
+        const images = stepElement.querySelectorAll('img[data-src]');
+        let loadedCount = 0;
+        const totalImages = images.length;
+
+        if (totalImages === 0) {
+          callback();
+          return;
         }
 
-        return false;
+        images.forEach(img => {
+          const actualImg = new Image();
+
+          actualImg.onload = function() {
+            img.src = this.src;
+            img.removeAttribute('data-src');
+            img.style.display = isApp ?
+              (img.classList.contains('app') ? 'block' : 'none') :
+              (img.classList.contains('web') ? 'block' : 'none');
+
+            loadedCount++;
+            if (loadedCount === totalImages) {
+              callback();
+            }
+          };
+
+          actualImg.onerror = function() {
+            loadedCount++;
+            if (loadedCount === totalImages) {
+              callback();
+            }
+          };
+
+          actualImg.src = img.getAttribute('data-src');
+        });
       }
-    }
-  }, clickDebounceTime);
 
-  // Enhanced click feedback with visual indicators
-  function addClickFeedback() {
-    const buttons = document.querySelectorAll('.button-action');
+      // Load next step sequentially
+      function loadNextStep() {
+        if (currentStep >= totalSteps) {
+          // All steps loaded
+          loadingIndicator.style.display = 'none';
+          container.style.opacity = '1';
+          loadingFinished = true;
+          sendLoadingState(false, 100);
+          return;
+        }
 
-    buttons.forEach(button => {
-      // Add touch start/end events for better mobile feedback
-      button.addEventListener('touchstart', function() {
-        this.style.transform = 'scale(0.95)';
-      }, { passive: true });
+        const stepElement = container.querySelector(`[data-step="${currentStep + 1}"]`);
+        if (!stepElement) {
+          currentStep++;
+          loadNextStep();
+          return;
+        }
 
-      button.addEventListener('touchend', function() {
-        setTimeout(() => {
-          this.style.transform = '';
-        }, 150);
-      }, { passive: true });
+        loadStepImages(stepElement, () => {
+          // Remove skeleton and show content
+          const skeleton = stepElement.querySelector('.step-skeleton');
+          if (skeleton) {
+            skeleton.remove();
+          }
 
-      // Add mouse events for desktop
-      button.addEventListener('mousedown', function() {
-        this.style.transform = 'scale(0.95)';
-      });
+          stepElement.classList.add('loaded');
+          currentStep++;
+          updateProgress(currentStep);
 
-      button.addEventListener('mouseup', function() {
-        setTimeout(() => {
-          this.style.transform = '';
-        }, 150);
-      });
+          // Load next step with a small delay for better UX
+          setTimeout(loadNextStep, 100);
+        });
+      }
 
-      // Reset on mouse leave
-      button.addEventListener('mouseleave', function() {
-        this.style.transform = '';
-      });
-    });
-  }
+      // Handle URL opening
+      function openWebBrowser(url) {
+        if (!url) return;
 
-  // Initialize click feedback when DOM is ready
-  ready(addClickFeedback);
+        try {
+          if (isApp) {
+            window?.flutter?.call('jumpTo', {
+              url: `app://web?target=1&url=${encodeURIComponent(url)}`
+            }, null);
+          } else {
+            if (window?.flutter) {
+              let openUrl = `app://web?target=1&url=${encodeURIComponent(url)}`;
+              window?.open(openUrl, '_blank');
+            } else {
+              window?.parent?.postMessage({
+                type: 'OPEN_URL',
+                url: url
+              }, '*');
+            }
+          }
+        } catch (error) {
+          console.error('Error opening URL:', error);
+          window?.open(url, '_blank');
+        }
+      }
 
-  // Global error handling for better debugging
-  window.addEventListener('error', function(e) {
-    console.error('Global error:', e.error);
-  });
+      // Setup click handlers
+      function setupClickHandlers() {
+        container.addEventListener('click', function(e) {
+          const link = e.target.closest('a[data-url]');
+          if (link) {
+            e.preventDefault();
+            e.stopPropagation();
 
-  // Handle page visibility changes
-  document.addEventListener('visibilitychange', function() {
-    if (document.visibilityState === 'visible') {
-      console.log('Page became visible');
-    } else {
-      console.log('Page became hidden');
-    }
-  });
+            const url = link.getAttribute('data-url');
+            if (url) {
+              // Add visual feedback
+              link.style.transform = 'scale(0.95)';
+              setTimeout(() => {
+                link.style.transform = '';
+              }, 100);
 
-  // Expose openWebBrowser globally for onclick handlers
-  window.openWebBrowser = openWebBrowser;
+              openWebBrowser(url);
+            }
+          }
+        }, { passive: false });
+      }
 
-</script>
+      // Initialize
+      function initialize() {
+        // Setup display mode
+        const appElements = container.querySelectorAll('.app');
+        const webElements = container.querySelectorAll('.web');
+
+        if (isApp) {
+          webElements.forEach(el => el.style.display = 'none');
+        } else {
+          appElements.forEach(el => el.style.display = 'none');
+        }
+
+        // Start sequential loading
+        updateProgress(0);
+        sendLoadingState(true, 0);
+
+        // Setup click handlers
+        setupClickHandlers();
+
+        // Start loading first step
+        setTimeout(loadNextStep, 300);
+      }
+
+      // Start when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initialize, { once: true });
+      } else {
+        initialize();
+      }
+    })();
+  </script>
+</body>
 
 </html>

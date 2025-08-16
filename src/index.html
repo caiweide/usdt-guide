@@ -292,15 +292,15 @@
 
         try {
           if (isApp) {
-            window.flutter?.call('jumpTo', {
+            window?.flutter?.call('jumpTo', {
               url: `app://web?target=1&url=${encodeURIComponent(url)}`
             }, null);
           } else {
-            if (window.flutter) {
+            if (window?.flutter) {
               let openUrl = `app://web?target=1&url=${encodeURIComponent(url)}`;
               window?.open(openUrl, '_blank');
             } else {
-              window.parent?.postMessage({
+              window?.parent?.postMessage({
                 type: 'OPEN_URL',
                 url: url
               }, '*');
@@ -309,7 +309,7 @@
         } catch (error) {
           console.error('Error opening URL:', error);
           // Fallback to window.open
-          window.open(url, '_blank');
+          window?.open(url, '_blank');
         }
       }
 

@@ -5,157 +5,211 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>波币钱包快速赚钱指南</title>
+
+  <!-- Preload critical resources -->
+  <link rel="preload" as="image" href="assets/images/app/1.jpg">
+  <link rel="preload" as="image" href="assets/images/web/1.jpg">
+  <link rel="dns-prefetch" href="//www.huobi.com">
+  <link rel="dns-prefetch" href="//www.binance.com">
+  <link rel="dns-prefetch" href="//www.okx.com">
+
   <style>
-    *,
-    html {
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
       scrollbar-width: none;
+      -ms-overflow-style: none;
     }
 
     body {
       width: 100vw;
       height: 100vh;
-      margin: 0;
-      padding: 0;
       background: #fff;
-      font-family: PingFang SC;
+      font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
       font-size: 14px;
       color: #000;
       user-select: none;
-      -moz-user-select: none;
       -webkit-user-select: none;
-      -ms-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      will-change: opacity;
     }
 
     .container::-webkit-scrollbar {
-      width: 0px;
-      background: transparent;
+      display: none;
     }
 
-    .container .step-list {
-      flex: 1;
+    .step-list {
       display: flex;
       flex-direction: column;
-      width: 100%;
-      height: 100%;
+      min-height: 100%;
     }
 
-    .container .step-list .step {
-      display: flex;
-      width: 100%;
-      height: auto;
-    }
-
-    .container .step-list .step .img {
-      width: 100%;
-      height: auto;
-    }
-
-    .container .step-list .step a {
-      outline: none;
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    }
-
-    .container .step-list .step .video-list {
-      padding: 0 15px;
-    }
-
-    .container .step-list .step .video-list .video-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0px 4px 15px 0px rgba(122, 136, 182, 0.1490196078);
-    }
-
-    .container .step-list .step .video-list .video-wrapper video {
-      width: 100%;
-      height: 100%;
-    }
-
-    .container .step-list .step.step3 {
+    .step {
       position: relative;
+      width: 100%;
+      flex-shrink: 0;
     }
 
-    .container .step-list .step.step3 .step_one_absolute_content {
+    .step img {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-width: 100%;
+      loading: lazy;
+    }
+
+    .step:first-child img {
+      loading: eager;
+    }
+
+    .step a {
+      outline: none;
+      display: block;
+      text-decoration: none;
+    }
+
+    .step3 .step_one_absolute_content {
       position: absolute;
       bottom: 15px;
-      right: 5%;
       left: 5%;
-      z-index: 1;
+      right: 5%;
+      z-index: 2;
     }
 
-    .container .step-list .step.step3 .step_one_absolute_child_content {
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+    .step_one_absolute_child_content {
+      position: absolute;
+      inset: 0;
       display: flex;
       flex-direction: column;
-      position: absolute;
       justify-content: center;
+      align-items: center;
     }
 
-    .container .step-list .step.step5 {
-      position: relative;
-    }
-
-    .container .step-list .step.step5 .step_two_absolute_content {
-      width: 38%;
+    .step5 .step_two_absolute_content {
+      position: absolute;
       bottom: 22.5%;
-      right: 5%;
       left: 5%;
-      position: absolute;
-      z-index: 1;
+      right: 5%;
+      width: auto;
+      max-width: 38%;
+      z-index: 2;
     }
 
-    .container .step-list .step.step5 .step_two_absolute_child_content {
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+    .step_two_absolute_child_content {
+      position: absolute;
+      inset: 0;
       display: flex;
       flex-direction: column;
-      position: absolute;
       justify-content: center;
     }
 
-    .container .step-list .step.step5 .cover_child {
+    .cover_child {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      margin: 3%;
-      margin-top: 0;
+      padding: 3%;
       flex: 1;
+      gap: 10px;
     }
 
-    .container .step-list .step.step5 .cover_child .row {
+    .cover_child .row {
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: flex-start;
     }
 
-    /* Loading state styles */
-    .container.loading {
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .container.loaded {
-      opacity: 1;
-    }
-
-    /* Click feedback */
     .button-action {
-      transition: transform 0.1s ease;
+      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      will-change: transform;
     }
 
     .button-action:active {
       transform: scale(0.95);
+    }
+
+    .container.loading {
+      opacity: 0;
+    }
+
+    .container.loaded {
+      opacity: 1;
+      transition: opacity 0.3s ease-out;
+    }
+
+    .image-container {
+      position: relative;
+      background: #f5f5f5;
+      min-height: 200px;
+    }
+
+    .image-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .image-container img.loaded {
+      opacity: 1;
+    }
+
+    /* Responsive optimizations */
+    @media (max-width: 768px) {
+      .step5 .step_two_absolute_content {
+        max-width: 45%;
+      }
+    }
+
+    /* Hidden elements optimization */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Critical path optimization */
+    .usdt-title {
+      margin: 3% 3% 0;
+    }
+
+    .usdt-title img {
+      width: 50%;
+      height: auto;
+    }
+
+    .button-grid {
+      display: flex;
+      margin: 0 3% 3%;
+      gap: 8px;
+    }
+
+    .button-grid > div {
+      flex: 1;
+      text-align: center;
+    }
+
+    .button-grid img {
+      width: 100%;
+      margin-bottom: 5px;
+    }
+
+    .button-grid .click-gif {
+      width: 80%;
     }
   </style>
 </head>
@@ -164,42 +218,50 @@
   <div class="container loading">
     <div class="step-list">
       <div class="step step1">
-        <img class="img app" src="assets/images/app/1.jpg" />
-        <img class="img web" src="assets/images/web/1.jpg" />
+        <div class="image-container">
+          <img class="img app" src="assets/images/app/1.jpg" alt="Step 1 App" />
+          <img class="img web" src="assets/images/web/1.jpg" alt="Step 1 Web" />
+        </div>
       </div>
+
       <div class="step step2">
-        <img class="img app" src="assets/images/app/2.jpg" />
-        <img class="img web" src="assets/images/web/2.jpg" />
+        <div class="image-container">
+          <img class="img app" src="assets/images/app/2.jpg" alt="Step 2 App" />
+          <img class="img web" src="assets/images/web/2.jpg" alt="Step 2 Web" />
+        </div>
       </div>
+
       <div class="step step3">
-        <img class="img app" src="assets/images/app/3.jpg" />
-        <img class="img web" src="assets/images/web/3.jpg" />
+        <div class="image-container">
+          <img class="img app" src="assets/images/app/3.jpg" alt="Step 3 App" />
+          <img class="img web" src="assets/images/web/3.jpg" alt="Step 3 Web" />
+        </div>
 
         <div class="step_one_absolute_content">
           <div style="position: relative;">
-            <img src="assets/images/rectangle_1.png" style="width: 100%;" />
+            <img src="assets/images/rectangle_1.png" style="width: 100%;" alt="Rectangle 1" />
 
             <div class="step_one_absolute_child_content">
               <div class="usdt-title">
-                <img src="assets/images/usdt_title.png" style="width: 50%; margin: 3%; margin-bottom: 0;" />
+                <img src="assets/images/usdt_title.png" alt="USDT Title" />
               </div>
-              <div style="display: flex; margin: 3%; margin-top: 0;">
-                <div style="flex: 1; text-align: center; margin-right: 8px;">
+              <div class="button-grid">
+                <div>
                   <a href="#" data-url="https://www.huobi.com/support/zh-cn/detail/44877723881747" class="button-action">
-                    <img src="assets/images/huobi_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
-                    <img src="assets/images/button_click.gif" style="width: 80%;" />
+                    <img src="assets/images/huobi_thumbnail.png" alt="Huobi" />
+                    <img src="assets/images/button_click.gif" class="click-gif" alt="Click" />
                   </a>
                 </div>
-                <div style="flex: 1; text-align: center; margin-right: 8px;">
+                <div>
                   <a href="#" data-url="https://www.binance.com/zh-TC/support/faq/如何在幣安-c2c-網站買入加密貨幣-360043832851" class="button-action">
-                    <img src="assets/images/binance_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
-                    <img src="assets/images/button_click.gif" style="width: 80%;" />
+                    <img src="assets/images/binance_thumbnail.png" alt="Binance" />
+                    <img src="assets/images/button_click.gif" class="click-gif" alt="Click" />
                   </a>
                 </div>
-                <div style="flex: 1; text-align: center;">
+                <div>
                   <a href="#" data-url="https://www.okx.com/cn/learn/how-to-buy-and-sell-on-okx-c2c" class="button-action">
-                    <img src="assets/images/okx_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
-                    <img src="assets/images/button_click.gif" style="width: 80%;" />
+                    <img src="assets/images/okx_thumbnail.png" alt="OKX" />
+                    <img src="assets/images/button_click.gif" class="click-gif" alt="Click" />
                   </a>
                 </div>
               </div>
@@ -207,36 +269,42 @@
           </div>
         </div>
       </div>
+
       <div class="step step4">
-        <img class="img app" src="assets/images/app/4.jpg" />
-        <img class="img web" src="assets/images/web/4.jpg" />
+        <div class="image-container">
+          <img class="img app" src="assets/images/app/4.jpg" alt="Step 4 App" />
+          <img class="img web" src="assets/images/web/4.jpg" alt="Step 4 Web" />
+        </div>
       </div>
+
       <div class="step step5">
-        <img class="img app" src="assets/images/app/5.jpg" style="width: 100%;" />
-        <img class="img web" src="assets/images/web/5.jpg" style="width: 100%;" />
+        <div class="image-container">
+          <img class="img app" src="assets/images/app/5.jpg" alt="Step 5 App" />
+          <img class="img web" src="assets/images/web/5.jpg" alt="Step 5 Web" />
+        </div>
 
         <div class="step_two_absolute_content">
           <div style="position: relative;">
-            <img src="assets/images/rectangle_2.png" style="width: 100%;" />
+            <img src="assets/images/rectangle_2.png" style="width: 100%;" alt="Rectangle 2" />
 
             <div class="step_two_absolute_child_content">
               <div class="cover_child">
                 <div class="row">
                   <a href="#" data-url="https://www.huobi.com.gt/support/zh-cn/detail/34893278495346?invite_code=xb6z7223&inviter_id=11353960" style="width: 62%; padding-top: 5px;" class="button-action">
-                    <img src="assets/images/huobi_title.png" style="width: 100%;" />
-                    <img src="assets/images/button_click.gif" style="width: 100%;" />
+                    <img src="assets/images/huobi_title.png" style="width: 100%;" alt="Huobi Title" />
+                    <img src="assets/images/button_click.gif" style="width: 100%;" alt="Click" />
                   </a>
                 </div>
                 <div class="row">
                   <a href="#" data-url="https://www.binance.com/zh-TC/support/faq/充值与提币新手指引-85a1c394ac1d489fb0bfac0ef2fceafd" style="width: 62%; padding-top: 5px;" class="button-action">
-                    <img src="assets/images/binance_title.png" style="width: 100%;" />
-                    <img src="assets/images/button_click.gif" style="width: 100%;" />
+                    <img src="assets/images/binance_title.png" style="width: 100%;" alt="Binance Title" />
+                    <img src="assets/images/button_click.gif" style="width: 100%;" alt="Click" />
                   </a>
                 </div>
                 <div class="row">
                   <a href="#" data-url="https://www.okx.com/cn/learn/extract-crypto-assets-app" style="width: 62%; padding-top: 5px;" class="button-action">
-                    <img src="assets/images/okx_title.png" style="width: 100%;" />
-                    <img src="assets/images/button_click.gif" style="width: 100%;" />
+                    <img src="assets/images/okx_title.png" style="width: 100%;" alt="OKX Title" />
+                    <img src="assets/images/button_click.gif" style="width: 100%;" alt="Click" />
                   </a>
                 </div>
               </div>
@@ -244,165 +312,218 @@
           </div>
         </div>
       </div>
+
       <div class="step step6">
-        <img class="img app" src="assets/images/app/6.jpg" />
-        <img class="img web" src="assets/images/web/6.jpg" />
+        <div class="image-container">
+          <img class="img app" src="assets/images/app/6.jpg" alt="Step 6 App" />
+          <img class="img web" src="assets/images/web/6.jpg" alt="Step 6 Web" />
+        </div>
       </div>
+
       <div class="step step7">
-        <img class="img app" src="assets/images/app/7.jpg" />
-        <img class="img web" src="assets/images/web/7.jpg" />
+        <div class="image-container">
+          <img class="img app" src="assets/images/app/7.jpg" alt="Step 7 App" />
+          <img class="img web" src="assets/images/web/7.jpg" alt="Step 7 Web" />
+        </div>
       </div>
+
       <div class="step step8">
-        <img class="img app" src="assets/images/app/8.jpg" />
-        <img class="img web" src="assets/images/web/8.jpg" />
+        <div class="image-container">
+          <img class="img app" src="assets/images/app/8.jpg" alt="Step 8 App" />
+          <img class="img web" src="assets/images/web/8.jpg" alt="Step 8 Web" />
+        </div>
       </div>
     </div>
   </div>
 
-  <script type="text/javascript">
+  <script>
+    // Optimized performance script
     (function() {
-      // Cache configuration and DOM elements
-      const urlParams = new URLSearchParams(window.location.search);
-      const isApp = urlParams.get('displayInApp') === 'true';
-      const container = document.querySelector('.container');
+      'use strict';
 
-      let loadedCount = 0;
-      let totalImages = 0;
-      let loadingFinished = false;
+      // Configuration
+      const config = {
+        isApp: new URLSearchParams(window.location.search).get('displayInApp') === 'true',
+        animationDelay: 400,
+        debounceDelay: 100
+      };
 
-      // Optimized message sender with debouncing
-      const sendLoadingState = (function() {
+      // Cache DOM elements
+      const elements = {
+        container: document.querySelector('.container'),
+        appImages: null,
+        webImages: null,
+        allImages: null
+      };
+
+      // State management
+      let state = {
+        loadedCount: 0,
+        totalImages: 0,
+        loadingFinished: false,
+        initialized: false
+      };
+
+      // Optimized debounced message sender
+      const sendLoadingState = (() => {
         let timeoutId;
-        return function(loading) {
-          if (loadingFinished && loading) return;
+        return (loading) => {
+          if (state.loadingFinished && loading) return;
+
           clearTimeout(timeoutId);
           timeoutId = setTimeout(() => {
-            window.parent?.postMessage({
-              title: '波币钱包快速赚钱指南',
-              loading: loading
-            }, '*');
-            if (!loading) loadingFinished = true;
+            try {
+              window.parent?.postMessage({
+                title: '波币钱包快速赚钱指南',
+                loading: loading
+              }, '*');
+              if (!loading) state.loadingFinished = true;
+            } catch (e) {
+              console.warn('PostMessage failed:', e);
+            }
           }, 0);
         };
       })();
 
-      // Handle URL opening with proper error handling
+      // Optimized URL opener with better fallback
       function openWebBrowser(url) {
         if (!url) return;
 
         try {
-          if (isApp) {
-            window?.flutter?.call('jumpTo', {
+          if (config.isApp && window.flutter?.call) {
+            window.flutter.call('jumpTo', {
               url: `app://web?target=1&url=${encodeURIComponent(url)}`
             }, null);
+          } else if (window.flutter) {
+            const openUrl = `app://web?target=1&url=${encodeURIComponent(url)}`;
+            window.open(openUrl, '_blank', 'noopener,noreferrer');
           } else {
-            if (window?.flutter) {
-              let openUrl = `app://web?target=1&url=${encodeURIComponent(url)}`;
-              window?.open(openUrl, '_blank');
-            } else {
-              window?.parent?.postMessage({
-                type: 'OPEN_URL',
-                url: url
-              }, '*');
-            }
+            window.parent?.postMessage({
+              type: 'OPEN_URL',
+              url: url
+            }, '*');
           }
         } catch (error) {
           console.error('Error opening URL:', error);
-          // Fallback to window.open
-          window?.open(url, '_blank');
+          window.open(url, '_blank', 'noopener,noreferrer');
         }
       }
 
-      // Optimized click handler with event delegation
+      // Optimized click handler
       function setupClickHandlers() {
-        container.addEventListener('click', function(e) {
+        elements.container.addEventListener('click', (e) => {
           const link = e.target.closest('a[data-url]');
-          if (link) {
-            e.preventDefault();
-            e.stopPropagation();
+          if (!link) return;
 
-            const url = link.getAttribute('data-url');
-            if (url) {
-              // Add visual feedback
-              link.style.transform = 'scale(0.95)';
+          e.preventDefault();
+          e.stopPropagation();
+
+          const url = link.getAttribute('data-url');
+          if (url) {
+            // Visual feedback with better performance
+            link.style.transform = 'scale(0.95)';
+            requestAnimationFrame(() => {
               setTimeout(() => {
                 link.style.transform = '';
-              }, 100);
+              }, config.debounceDelay);
+            });
 
-              openWebBrowser(url);
-            }
+            openWebBrowser(url);
           }
         }, { passive: false });
       }
 
-      // Image loading handler
-      function handleImageLoad() {
-        if (++loadedCount === totalImages && !loadingFinished) {
-          container.classList.remove('loading');
-          container.classList.add('loaded');
-          sendLoadingState(false);
-        }
+      // Image loading handler with better error handling
+      function handleImageLoad(img) {
+        return () => {
+          img.classList.add('loaded');
+          state.loadedCount++;
+
+          if (state.loadedCount >= state.totalImages && !state.loadingFinished) {
+            elements.container.classList.remove('loading');
+            elements.container.classList.add('loaded');
+            sendLoadingState(false);
+          }
+        };
       }
 
-      // Setup display mode and count images
+      // Optimized initialization
       function initialize() {
-        // Cache element collections
-        const appElements = container.querySelectorAll('.app');
-        const webElements = container.querySelectorAll('.web');
-        const allImages = container.querySelectorAll('img');
+        if (state.initialized) return;
+        state.initialized = true;
 
-        // Setup display mode
-        if (isApp) {
-          webElements.forEach(el => el.style.display = 'none');
-          appElements.forEach(el => el.style.display = 'block');
-          totalImages = container.querySelectorAll('.app').length;
-        } else {
-          appElements.forEach(el => el.style.display = 'none');
-          webElements.forEach(el => el.style.display = 'block');
-          totalImages = container.querySelectorAll('.web').length;
-        }
+        // Cache element collections once
+        elements.appImages = elements.container.querySelectorAll('.app');
+        elements.webImages = elements.container.querySelectorAll('.web');
+        elements.allImages = elements.container.querySelectorAll('img');
 
-        // Count all images (including overlay images)
-        totalImages = allImages.length;
+        // Setup display mode efficiently
+        const hideElements = config.isApp ? elements.webImages : elements.appImages;
+        const showElements = config.isApp ? elements.appImages : elements.webImages;
 
-        // Send initial loading state
+        hideElements.forEach(el => el.classList.add('hidden'));
+        showElements.forEach(el => el.classList.remove('hidden'));
+
+        state.totalImages = elements.allImages.length;
         sendLoadingState(true);
 
-        // Handle case with no images
-        if (totalImages === 0) {
-          container.classList.remove('loading');
-          container.classList.add('loaded');
+        // Handle no images case
+        if (state.totalImages === 0) {
+          elements.container.classList.remove('loading');
+          elements.container.classList.add('loaded');
           sendLoadingState(false);
           return;
         }
 
-        // Setup image loading listeners
-        allImages.forEach(img => {
-          if (img.complete && img.naturalHeight !== 0) {
-            handleImageLoad();
+        // Setup image loading with intersection observer for better performance
+        const imageObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              if (img.complete && img.naturalHeight !== 0) {
+                handleImageLoad(img)();
+              } else {
+                img.addEventListener('load', handleImageLoad(img), { once: true });
+                img.addEventListener('error', handleImageLoad(img), { once: true });
+              }
+              imageObserver.unobserve(img);
+            }
+          });
+        }, { threshold: 0.1 });
+
+        // Observe images for lazy loading
+        elements.allImages.forEach(img => {
+          if (img.loading === 'eager' || img.closest('.step1')) {
+            // Load first images immediately
+            if (img.complete && img.naturalHeight !== 0) {
+              handleImageLoad(img)();
+            } else {
+              img.addEventListener('load', handleImageLoad(img), { once: true });
+              img.addEventListener('error', handleImageLoad(img), { once: true });
+            }
           } else {
-            img.addEventListener('load', handleImageLoad, { once: true });
-            img.addEventListener('error', handleImageLoad, { once: true });
+            imageObserver.observe(img);
           }
         });
 
-        // Setup click handlers
         setupClickHandlers();
       }
 
-      // Container animation with proper timing
+      // Optimized container display
       function showContainer() {
-        container.style.display = 'none';
-        setTimeout(() => {
-          container.style.display = 'block';
-          // Use CSS transition instead of animation for smoother performance
-          if (loadingFinished) {
-            container.classList.add('loaded');
-          }
-        }, 400);
+        elements.container.style.visibility = 'hidden';
+
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            elements.container.style.visibility = 'visible';
+            if (state.loadingFinished) {
+              elements.container.classList.add('loaded');
+            }
+          }, config.animationDelay);
+        });
       }
 
-      // Initialize everything
+      // Initialize when ready
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
           initialize();
@@ -412,6 +533,12 @@
         initialize();
         showContainer();
       }
+
+      // Cleanup on page unload
+      window.addEventListener('beforeunload', () => {
+        state.loadingFinished = true;
+      });
+
     })();
   </script>
 </body>

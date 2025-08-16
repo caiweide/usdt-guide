@@ -297,7 +297,8 @@
             }, null);
           } else {
             if (window.flutter) {
-              window.open(url, '_blank');
+              let openUrl = `app://web?target=1&url=${encodeURIComponent(url)}`;
+              window?.open(openUrl, '_blank');
             } else {
               window.parent?.postMessage({
                 type: 'OPEN_URL',

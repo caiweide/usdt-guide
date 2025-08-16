@@ -296,10 +296,14 @@
               url: `app://web?target=1&url=${encodeURIComponent(url)}`
             }, null);
           } else {
-            window.parent?.postMessage({
-              type: 'OPEN_URL',
-              url: url
-            }, '*');
+            if (window.flutter) {
+              window.open(url, '_blank');
+            } else {
+              window.parent?.postMessage({
+                type: 'OPEN_URL',
+                url: url
+              }, '*');
+            }
           }
         } catch (error) {
           console.error('Error opening URL:', error);

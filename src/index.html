@@ -45,12 +45,6 @@
       display: flex;
       width: 100%;
       height: auto;
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
-    }
-
-    .container .step-list .step.loaded {
-      opacity: 1;
     }
 
     .container .step-list .step .img {
@@ -145,32 +139,14 @@
       justify-content: center;
     }
 
-    /* Loading indicator */
-    .loading-indicator {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 16px;
-      color: #666;
-      z-index: 1000;
+    /* Loading state styles */
+    .container.loading {
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
-    .loading-progress {
-      width: 200px;
-      height: 4px;
-      background: #f0f0f0;
-      border-radius: 2px;
-      margin-top: 10px;
-      overflow: hidden;
-    }
-
-    .loading-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #4CAF50, #81C784);
-      border-radius: 2px;
-      width: 0%;
-      transition: width 0.3s ease;
+    .container.loaded {
+      opacity: 1;
     }
 
     /* Click feedback */
@@ -181,77 +157,49 @@
     .button-action:active {
       transform: scale(0.95);
     }
-
-    /* Skeleton loader for better UX */
-    .step-skeleton {
-      width: 100%;
-      height: 200px;
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-      background-size: 200% 100%;
-      animation: skeleton-loading 2s infinite;
-    }
-
-    @keyframes skeleton-loading {
-      0% {
-        background-position: 200% 0;
-      }
-      100% {
-        background-position: -200% 0;
-      }
-    }
   </style>
 </head>
 
 <body>
-  <div class="loading-indicator">
-    <div>加载中... <span id="progress-text">0%</span></div>
-    <div class="loading-progress">
-      <div class="loading-bar" id="progress-bar"></div>
-    </div>
-  </div>
-
-  <div class="container">
+  <div class="container loading">
     <div class="step-list">
-      <div class="step step1" data-step="1">
-        <div class="step-skeleton"></div>
-        <img class="img app" data-src="assets/images/app/1.jpg" style="display: none;" />
-        <img class="img web" data-src="assets/images/web/1.jpg" style="display: none;" />
+      <div class="step step1">
+        <img class="img app" src="assets/images/app/1.jpg" />
+        <img class="img web" src="assets/images/web/1.jpg" />
       </div>
-      <div class="step step2" data-step="2">
-        <div class="step-skeleton"></div>
-        <img class="img app" data-src="assets/images/app/2.jpg" style="display: none;" />
-        <img class="img web" data-src="assets/images/web/2.jpg" style="display: none;" />
+      <div class="step step2">
+        <img class="img app" src="assets/images/app/2.jpg" />
+        <img class="img web" src="assets/images/web/2.jpg" />
       </div>
-      <div class="step step3" data-step="3">
-        <div class="step-skeleton"></div>
-        <img class="img app" data-src="assets/images/app/3.jpg" style="display: none;" />
-        <img class="img web" data-src="assets/images/web/3.jpg" style="display: none;" />
+      <div class="step step3">
+        <img class="img app" src="assets/images/app/3.jpg" />
+        <img class="img web" src="assets/images/web/3.jpg" />
 
         <div class="step_one_absolute_content">
           <div style="position: relative;">
-            <img data-src="assets/images/rectangle_1.png" style="width: 100%;" />
+            <img src="assets/images/rectangle_1.png" style="width: 100%;" />
 
             <div class="step_one_absolute_child_content">
               <div class="usdt-title">
-                <img data-src="assets/images/usdt_title.png" style="width: 50%; margin: 3%; margin-bottom: 0;" />
+                <img src="assets/images/usdt_title.png" style="width: 50%; margin: 3%; margin-bottom: 0;" />
               </div>
               <div style="display: flex; margin: 3%; margin-top: 0;">
                 <div style="flex: 1; text-align: center; margin-right: 8px;">
                   <a href="#" data-url="https://www.huobi.com/support/zh-cn/detail/44877723881747" class="button-action">
-                    <img data-src="assets/images/huobi_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
-                    <img data-src="assets/images/button_click.gif" style="width: 80%;" />
+                    <img src="assets/images/huobi_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
+                    <img src="assets/images/button_click.gif" style="width: 80%;" />
                   </a>
                 </div>
                 <div style="flex: 1; text-align: center; margin-right: 8px;">
                   <a href="#" data-url="https://www.binance.com/zh-TC/support/faq/如何在幣安-c2c-網站買入加密貨幣-360043832851" class="button-action">
-                    <img data-src="assets/images/binance_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
-                    <img data-src="assets/images/button_click.gif" style="width: 80%;" />
+                    <img src="assets/images/binance_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
+                    <img src="assets/images/button_click.gif" style="width: 80%;" />
                   </a>
                 </div>
                 <div style="flex: 1; text-align: center;">
                   <a href="#" data-url="https://www.okx.com/cn/learn/how-to-buy-and-sell-on-okx-c2c" class="button-action">
-                    <img data-src="assets/images/okx_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
-                    <img data-src="assets/images/button_click.gif" style="width: 80%;" />
+                    <img src="assets/images/okx_thumbnail.png" style="width: 100%; margin-bottom: 5px;" />
+                    <img src="assets/images/button_click.gif" style="width: 80%;" />
                   </a>
                 </div>
               </div>
@@ -259,38 +207,36 @@
           </div>
         </div>
       </div>
-      <div class="step step4" data-step="4">
-        <div class="step-skeleton"></div>
-        <img class="img app" data-src="assets/images/app/4.jpg" style="display: none;" />
-        <img class="img web" data-src="assets/images/web/4.jpg" style="display: none;" />
+      <div class="step step4">
+        <img class="img app" src="assets/images/app/4.jpg" />
+        <img class="img web" src="assets/images/web/4.jpg" />
       </div>
-      <div class="step step5" data-step="5">
-        <div class="step-skeleton"></div>
-        <img class="img app" data-src="assets/images/app/5.jpg" style="width: 100%; display: none;" />
-        <img class="img web" data-src="assets/images/web/5.jpg" style="width: 100%; display: none;" />
+      <div class="step step5">
+        <img class="img app" src="assets/images/app/5.jpg" style="width: 100%;" />
+        <img class="img web" src="assets/images/web/5.jpg" style="width: 100%;" />
 
         <div class="step_two_absolute_content">
           <div style="position: relative;">
-            <img data-src="assets/images/rectangle_2.png" style="width: 100%;" />
+            <img src="assets/images/rectangle_2.png" style="width: 100%;" />
 
             <div class="step_two_absolute_child_content">
               <div class="cover_child">
                 <div class="row">
                   <a href="#" data-url="https://www.huobi.com.gt/support/zh-cn/detail/34893278495346?invite_code=xb6z7223&inviter_id=11353960" style="width: 62%; padding-top: 5px;" class="button-action">
-                    <img data-src="assets/images/huobi_title.png" style="width: 100%;" />
-                    <img data-src="assets/images/button_click.gif" style="width: 100%;" />
+                    <img src="assets/images/huobi_title.png" style="width: 100%;" />
+                    <img src="assets/images/button_click.gif" style="width: 100%;" />
                   </a>
                 </div>
                 <div class="row">
                   <a href="#" data-url="https://www.binance.com/zh-TC/support/faq/充值与提币新手指引-85a1c394ac1d489fb0bfac0ef2fceafd" style="width: 62%; padding-top: 5px;" class="button-action">
-                    <img data-src="assets/images/binance_title.png" style="width: 100%;" />
-                    <img data-src="assets/images/button_click.gif" style="width: 100%;" />
+                    <img src="assets/images/binance_title.png" style="width: 100%;" />
+                    <img src="assets/images/button_click.gif" style="width: 100%;" />
                   </a>
                 </div>
                 <div class="row">
                   <a href="#" data-url="https://www.okx.com/cn/learn/extract-crypto-assets-app" style="width: 62%; padding-top: 5px;" class="button-action">
-                    <img data-src="assets/images/okx_title.png" style="width: 100%;" />
-                    <img data-src="assets/images/button_click.gif" style="width: 100%;" />
+                    <img src="assets/images/okx_title.png" style="width: 100%;" />
+                    <img src="assets/images/button_click.gif" style="width: 100%;" />
                   </a>
                 </div>
               </div>
@@ -298,20 +244,17 @@
           </div>
         </div>
       </div>
-      <div class="step step6" data-step="6">
-        <div class="step-skeleton"></div>
-        <img class="img app" data-src="assets/images/app/6.jpg" style="display: none;" />
-        <img class="img web" data-src="assets/images/web/6.jpg" style="display: none;" />
+      <div class="step step6">
+        <img class="img app" src="assets/images/app/6.jpg" />
+        <img class="img web" src="assets/images/web/6.jpg" />
       </div>
-      <div class="step step7" data-step="7">
-        <div class="step-skeleton"></div>
-        <img class="img app" data-src="assets/images/app/7.jpg" style="display: none;" />
-        <img class="img web" data-src="assets/images/web/7.jpg" style="display: none;" />
+      <div class="step step7">
+        <img class="img app" src="assets/images/app/7.jpg" />
+        <img class="img web" src="assets/images/web/7.jpg" />
       </div>
-      <div class="step step8" data-step="8">
-        <div class="step-skeleton"></div>
-        <img class="img app" data-src="assets/images/app/8.jpg" style="display: none;" />
-        <img class="img web" data-src="assets/images/web/8.jpg" style="display: none;" />
+      <div class="step step8">
+        <img class="img app" src="assets/images/app/8.jpg" />
+        <img class="img web" src="assets/images/web/8.jpg" />
       </div>
     </div>
   </div>
@@ -322,112 +265,30 @@
       const urlParams = new URLSearchParams(window.location.search);
       const isApp = urlParams.get('displayInApp') === 'true';
       const container = document.querySelector('.container');
-      const loadingIndicator = document.querySelector('.loading-indicator');
-      const progressBar = document.getElementById('progress-bar');
-      const progressText = document.getElementById('progress-text');
 
-      let currentStep = 0;
-      let totalSteps = 8;
+      let loadedCount = 0;
+      let totalImages = 0;
       let loadingFinished = false;
+      let imageQueue = [];
+      let currentLoadingIndex = 0;
 
-      // Optimized message sender
+      // Optimized message sender with debouncing
       const sendLoadingState = (function() {
         let timeoutId;
-        return function(loading, progress = 0) {
+        return function(loading) {
           if (loadingFinished && loading) return;
           clearTimeout(timeoutId);
           timeoutId = setTimeout(() => {
             window.parent?.postMessage({
               title: '波币钱包快速赚钱指南',
-              loading: loading,
-              progress: progress
+              loading: loading
             }, '*');
             if (!loading) loadingFinished = true;
           }, 0);
         };
       })();
 
-      // Update progress indicator
-      function updateProgress(step) {
-        const progress = Math.round((step / totalSteps) * 100);
-        progressBar.style.width = `${progress}%`;
-        progressText.textContent = `${progress}%`;
-        sendLoadingState(step < totalSteps, progress);
-      }
-
-      // Load images for a specific step
-      function loadStepImages(stepElement, callback) {
-        const images = stepElement.querySelectorAll('img[data-src]');
-        let loadedCount = 0;
-        const totalImages = images.length;
-
-        if (totalImages === 0) {
-          callback();
-          return;
-        }
-
-        images.forEach(img => {
-          const actualImg = new Image();
-
-          actualImg.onload = function() {
-            img.src = this.src;
-            img.removeAttribute('data-src');
-            img.style.display = isApp ?
-              (img.classList.contains('app') ? 'block' : 'none') :
-              (img.classList.contains('web') ? 'block' : 'none');
-
-            loadedCount++;
-            if (loadedCount === totalImages) {
-              callback();
-            }
-          };
-
-          actualImg.onerror = function() {
-            loadedCount++;
-            if (loadedCount === totalImages) {
-              callback();
-            }
-          };
-
-          actualImg.src = img.getAttribute('data-src');
-        });
-      }
-
-      // Load next step sequentially
-      function loadNextStep() {
-        if (currentStep >= totalSteps) {
-          // All steps loaded
-          loadingIndicator.style.display = 'none';
-          container.style.opacity = '1';
-          loadingFinished = true;
-          sendLoadingState(false, 100);
-          return;
-        }
-
-        const stepElement = container.querySelector(`[data-step="${currentStep + 1}"]`);
-        if (!stepElement) {
-          currentStep++;
-          loadNextStep();
-          return;
-        }
-
-        loadStepImages(stepElement, () => {
-          // Remove skeleton and show content
-          const skeleton = stepElement.querySelector('.step-skeleton');
-          if (skeleton) {
-            skeleton.remove();
-          }
-
-          stepElement.classList.add('loaded');
-          currentStep++;
-          updateProgress(currentStep);
-
-          // Load next step with a small delay for better UX
-          setTimeout(loadNextStep, 100);
-        });
-      }
-
-      // Handle URL opening
+      // Handle URL opening with proper error handling
       function openWebBrowser(url) {
         if (!url) return;
 
@@ -449,11 +310,12 @@
           }
         } catch (error) {
           console.error('Error opening URL:', error);
+          // Fallback to window.open
           window?.open(url, '_blank');
         }
       }
 
-      // Setup click handlers
+      // Optimized click handler with event delegation
       function setupClickHandlers() {
         container.addEventListener('click', function(e) {
           const link = e.target.closest('a[data-url]');
@@ -475,34 +337,115 @@
         }, { passive: false });
       }
 
-      // Initialize
+      // Sequential image loading handler
+      function loadNextImage() {
+        if (currentLoadingIndex >= imageQueue.length) {
+          return;
+        }
+
+        const img = imageQueue[currentLoadingIndex];
+        const originalSrc = img.src;
+
+        // Create a new image to preload
+        const tempImg = new Image();
+
+        tempImg.onload = function() {
+          loadedCount++;
+          currentLoadingIndex++;
+
+          if (loadedCount === totalImages && !loadingFinished) {
+            container.classList.remove('loading');
+            container.classList.add('loaded');
+            sendLoadingState(false);
+          } else {
+            // Load next image with small delay
+            setTimeout(loadNextImage, 50);
+          }
+        };
+
+        tempImg.onerror = function() {
+          loadedCount++;
+          currentLoadingIndex++;
+
+          if (loadedCount === totalImages && !loadingFinished) {
+            container.classList.remove('loading');
+            container.classList.add('loaded');
+            sendLoadingState(false);
+          } else {
+            // Load next image even if current failed
+            setTimeout(loadNextImage, 50);
+          }
+        };
+
+        tempImg.src = originalSrc;
+      }
+
+      // Setup display mode and prepare sequential loading
       function initialize() {
-        // Setup display mode
+        // Cache element collections
         const appElements = container.querySelectorAll('.app');
         const webElements = container.querySelectorAll('.web');
+        const allImages = container.querySelectorAll('img');
 
+        // Setup display mode
         if (isApp) {
           webElements.forEach(el => el.style.display = 'none');
+          appElements.forEach(el => el.style.display = 'block');
         } else {
           appElements.forEach(el => el.style.display = 'none');
+          webElements.forEach(el => el.style.display = 'block');
+        }
+
+        // Build image queue for sequential loading
+        allImages.forEach(img => {
+          if ((isApp && img.classList.contains('app')) ||
+              (!isApp && img.classList.contains('web')) ||
+              (!img.classList.contains('app') && !img.classList.contains('web'))) {
+            imageQueue.push(img);
+          }
+        });
+
+        totalImages = imageQueue.length;
+
+        // Send initial loading state
+        sendLoadingState(true);
+
+        // Handle case with no images
+        if (totalImages === 0) {
+          container.classList.remove('loading');
+          container.classList.add('loaded');
+          sendLoadingState(false);
+          return;
         }
 
         // Start sequential loading
-        updateProgress(0);
-        sendLoadingState(true, 0);
+        loadNextImage();
 
         // Setup click handlers
         setupClickHandlers();
-
-        // Start loading first step
-        setTimeout(loadNextStep, 300);
       }
 
-      // Start when DOM is ready
+      // Container animation with proper timing
+      function showContainer() {
+        container.style.display = 'none';
+        setTimeout(() => {
+          container.style.display = 'block';
+          // Use CSS transition instead of animation for smoother performance
+          if (loadingFinished) {
+            container.classList.add('loaded');
+          }
+        }, 400);
+      }
+
+      // Initialize everything
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initialize, { once: true });
+        document.addEventListener('DOMContentLoaded', () => {
+          initialize();
+          showContainer();
+        }, { once: true });
       } else {
         initialize();
+        showContainer();
       }
     })();
   </script>

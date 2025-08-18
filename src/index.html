@@ -139,16 +139,6 @@
       justify-content: center;
     }
 
-    /* Loading state styles */
-    .container.loading {
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .container.loaded {
-      opacity: 1;
-    }
-
     /* Click feedback */
     .button-action {
       transition: transform 0.1s ease;
@@ -161,7 +151,7 @@
 </head>
 
 <body>
-  <div class="container loading">
+  <div class="container">
     <div class="step-list">
       <div class="step step1">
         <img class="img app" src="assets/images/app/1.jpg" />
@@ -266,27 +256,34 @@
       const isApp = urlParams.get('displayInApp') === 'true';
       const container = document.querySelector('.container');
 
-      let loadedCount = 0;
-      let totalImages = 0;
-      let loadingFinished = false;
-      let imageQueue = [];
-      let currentLoadingIndex = 0;
+      // Send main page title immediately
+      function sendMainPageTitle() {
+        window.parent?.postMessage({
+          title: document.title,
+          isMainPage: true
+        }, '*');
+      }
 
-      // Optimized message sender with debouncing
-      const sendLoadingState = (function() {
-        let timeoutId;
-        return function(loading) {
-          if (loadingFinished && loading) return;
-          clearTimeout(timeoutId);
-          timeoutId = setTimeout(() => {
-            window.parent?.postMessage({
-              title: '波币钱包快速赚钱指南',
-              loading: loading
-            }, '*');
-            if (!loading) loadingFinished = true;
-          }, 0);
-        };
-      })();
+      // Send main page title on load
+      sendMainPageTitle();
+
+      // Handle page visibility changes
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+          setTimeout(() => {
+            sendMainPageTitle();
+          }, 300);
+        }
+      });
+
+      // Listen for browser back/forward navigation
+      window.addEventListener('pageshow', function (event) {
+        if (event.persisted || window.performance.navigation.type === 2) {
+          setTimeout(() => {
+            sendMainPageTitle();
+          }, 500);
+        }
+      });
 
       // Handle URL opening with proper error handling
       function openWebBrowser(url) {
@@ -337,128 +334,30 @@
         }, { passive: false });
       }
 
-      // Sequential image loading handler
-      function loadNextImage() {
-        if (currentLoadingIndex >= imageQueue.length) {
-          return;
-        }
-
-        const img = imageQueue[currentLoadingIndex];
-        const originalSrc = img.src;
-
-        // Create a new image to preload
-        const tempImg = new Image();
-
-        tempImg.onload = function() {
-          loadedCount++;
-          currentLoadingIndex++;
-
-          // Show content after first image loads
-          if (loadedCount === 1) {
-            container.classList.remove('loading');
-            container.classList.add('loaded');
-            sendLoadingState(false);
-          }
-
-          // Continue loading remaining images immediately
-          if (currentLoadingIndex < imageQueue.length) {
-            loadNextImage();
-          }
-        };
-
-        tempImg.onerror = function() {
-          loadedCount++;
-          currentLoadingIndex++;
-
-          // Show content after first image attempt (even if failed)
-          if (loadedCount === 1) {
-            container.classList.remove('loading');
-            container.classList.add('loaded');
-            sendLoadingState(false);
-          }
-
-          // Continue loading remaining images immediately
-          if (currentLoadingIndex < imageQueue.length) {
-            loadNextImage();
-          }
-        };
-
-        tempImg.src = originalSrc;
-      }
-
-      // Setup display mode and prepare sequential loading
+      // Setup display mode and remove unused images to save memory
       function initialize() {
         // Cache element collections
         const appElements = container.querySelectorAll('.app');
         const webElements = container.querySelectorAll('.web');
-        const allImages = container.querySelectorAll('img');
 
-        // Setup display mode
+        // Setup display mode and remove unused elements
         if (isApp) {
-          webElements.forEach(el => el.style.display = 'none');
+          webElements.forEach(el => el.remove());
           appElements.forEach(el => el.style.display = 'block');
         } else {
-          appElements.forEach(el => el.style.display = 'none');
+          appElements.forEach(el => el.remove());
           webElements.forEach(el => el.style.display = 'block');
         }
-
-        // Build image queue for sequential loading - prioritize main step images
-        const mainImages = [];
-        const overlayImages = [];
-
-        allImages.forEach(img => {
-          if ((isApp && img.classList.contains('app')) ||
-              (!isApp && img.classList.contains('web'))) {
-            mainImages.push(img);
-          } else if (!img.classList.contains('app') && !img.classList.contains('web')) {
-            overlayImages.push(img);
-          }
-        });
-
-        // Load main step images first, then overlay images
-        imageQueue = [...mainImages, ...overlayImages];
-
-        totalImages = imageQueue.length;
-
-        // Send initial loading state
-        sendLoadingState(true);
-
-        // Handle case with no images
-        if (totalImages === 0) {
-          container.classList.remove('loading');
-          container.classList.add('loaded');
-          sendLoadingState(false);
-          return;
-        }
-
-        // Start sequential loading
-        loadNextImage();
 
         // Setup click handlers
         setupClickHandlers();
       }
 
-      // Container animation with proper timing
-      function showContainer() {
-        container.style.display = 'none';
-        setTimeout(() => {
-          container.style.display = 'block';
-          // Use CSS transition instead of animation for smoother performance
-          if (loadingFinished) {
-            container.classList.add('loaded');
-          }
-        }, 400);
-      }
-
       // Initialize everything
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-          initialize();
-          showContainer();
-        }, { once: true });
+        document.addEventListener('DOMContentLoaded', initialize, { once: true });
       } else {
         initialize();
-        showContainer();
       }
     })();
   </script>

@@ -23,7 +23,7 @@ zip -r usdt-guide-$(date +%Y%m%d%H%M).zip usdt-guide -x usdt-guide/main.js
 
 if [ "$1" != "test" ]; then
     git add .
-    git commit -m "build release $(date +%Y%m%d%H%M)"
+    git commit -m "build release $(date +%Y%m%d%H%M) [zip]"
     git push
 fi
 

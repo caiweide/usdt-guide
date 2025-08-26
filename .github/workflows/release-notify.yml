@@ -1,0 +1,59 @@
+name: telegram message
+on: [push]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get commit details
+        id: commit
+        run: |
+          SHORT_SHA=${GITHUB_SHA:0:7}
+          TIMESTAMP=$(TZ='Asia/Phnom_Penh' date '+%Y-%m-%d %H:%M:%S')
+          PROJECT_NAME="${{ github.event.repository.name }}"
+          CAPITALIZED_PROJECT="${PROJECT_NAME^}"
+          echo "short_sha=$SHORT_SHA" >> $GITHUB_OUTPUT
+          echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
+          echo "project_name=$CAPITALIZED_PROJECT" >> $GITHUB_OUTPUT
+
+      - name: Send Telegram notification
+        if: success()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: html
+          message: |
+            ${{ github.actor != github.repository_owner && format('FYI: @{0}
+
+            ', github.repository_owner) || '' }}🚀 <b>Deployment Success!!</b> ✨🎉🥳
+
+            📁 <a href="https://github.com/${{ github.repository }}">${{ steps.commit.outputs.project_name }}</a>
+            👤 <b>${{ github.actor }}</b>
+            💬 <i>${{ github.event.head_commit.message }}</i>
+            📝 <code>${{ steps.commit.outputs.short_sha }}</code>
+            🕒 ${{ steps.commit.outputs.timestamp }}
+
+            🔗 <a href="https://github.com/${{ github.repository }}/commit/${{ github.sha }}">Changes</a> | <a href="${{ github.event.repository.homepage }}">Live Site</a>
+
+      - name: Send failure notification
+        if: failure()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: html
+          message: |
+            ${{ github.actor != github.repository_owner && format('FYI: @{0}
+
+            ', github.repository_owner) || '' }}❌ <b>Deployment Failed!!</b>
+
+            📁 <a href="https://github.com/${{ github.repository }}">${{ steps.commit.outputs.project_name }}</a>
+            👤 <b>${{ github.actor }}</b>
+            💬 <i>${{ github.event.head_commit.message }}</i>
+            📝 <code>${{ steps.commit.outputs.short_sha }}</code>
+            🕒 ${{ steps.commit.outputs.timestamp }}
+            ❌ Check <a href="https://github.com/${{ github.repository }}/actions">GitHub Actions</a> for details
+
+            🔗 <a href="https://github.com/${{ github.repository }}/commit/${{ github.sha }}">Changes</a>

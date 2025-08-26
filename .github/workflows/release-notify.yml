@@ -25,15 +25,15 @@ jobs:
         id: zipfile
         if: contains(github.event.head_commit.message, '[zip]')
         run: |
-          # Find the faq-*.zip file
-          FAQ_ZIP=$(find . -name "faq-*.zip" -type f | head -1)
-          if [ -n "$FAQ_ZIP" ]; then
+          # Find the usdt-guide-*.zip file
+          USDT_GUIDE_ZIP=$(find . -name "usdt-guide-*.zip" -type f | head -1)
+          if [ -n "$USDT_GUIDE_ZIP" ]; then
             # Remove the ./ prefix if present
-            FAQ_ZIP=${FAQ_ZIP#./}
-            echo "faq_zip_file=$FAQ_ZIP" >> $GITHUB_OUTPUT
-            echo "Found FAQ zip file: $FAQ_ZIP"
+            USDT_GUIDE_ZIP=${USDT_GUIDE_ZIP#./}
+            echo "usdt_guide_zip_file=$USDT_GUIDE_ZIP" >> $GITHUB_OUTPUT
+            echo "Found usdt-guide zip file: $USDT_GUIDE_ZIP"
           else
-            echo "No faq-*.zip file found"
+            echo "No usdt-guide-*.zip file found"
             exit 1
           fi
 

@@ -15,8 +15,34 @@ while (directories.length > 0) {
   directories.push(...dirContents.filter(file => fs.statSync(file).isDirectory()));
 }
 
-// init timestamp
-var timestamp = Date.now();
+// init timestamp in YYYYMMDDHHMM format
+var now = new Date();
+var timestamp = now.getFullYear().toString() +
+  (now.getMonth() + 1).toString().padStart(2, '0') +
+  now.getDate().toString().padStart(2, '0') +
+  now.getHours().toString().padStart(2, '0') +
+  now.getMinutes().toString().padStart(2, '0');
+
+// Helper function to generate flattened filename with path info
+function generateFlattenedFilename(pathData, basePath = 'images') {
+  const relativePath = path.relative('src', pathData.filename);
+  const parsedPath = path.parse(relativePath);
+
+  // Extract the directory path and convert to filename-friendly format
+  const dirPath = parsedPath.dir.replace(/\\/g, '/'); // normalize separators
+  const pathParts = dirPath.split('/').filter(part => part !== ''); // remove empty parts
+
+  // Remove redundant parts: 'assets', 'images' from the path
+  const filteredParts = pathParts.filter(part =>
+    part !== 'assets' && part !== 'images'
+  );
+
+  // Create the filename: path parts + basename + timestamp + extension
+  const pathString = filteredParts.length > 0 ? filteredParts.join('-') + '-' : '';
+  const filename = `${pathString}${parsedPath.name}-${timestamp}${parsedPath.ext}`;
+
+  return `${basePath}/${filename}`;
+}
 
 module.exports = {
   mode: 'development',
@@ -31,40 +57,12 @@ module.exports = {
         test: /\.html$/i,
         use: ['html-loader'],
       },
-      // for images
-      // {
-      //   test: /\.(png|jpg|gif)$/,
-      //   type: 'asset/resource',
-      //   loader: 'image-webpack-loader',
-      //   options: {
-      //     disable: true
-      //   },
-      //   generator: {
-      //     filename: `images/[name]-[hash]${timestamp}[ext]`
-      //   },
-      // },
-      // for images
+      // for images - flattened with path in filename
       {
         test: /\.(png|jpg|webp|gif)$/i,
         type: 'asset/resource',
-        // use: [{
-        //   loader: 'image-webpack-loader',
-        //   options: {
-        //     mozjpeg: {
-        //       quality: 85,
-        //     },
-        //     // pngquant: {
-        //     //   quality: [.90, .95],
-        //     // },
-        //   }
-        // }],
-        // parser: {
-        //   dataUrlCondition: {
-        //     maxSize: 10 * 1024 // 10kb
-        //   }
-        // },
         generator: {
-          filename: `images/[name]-[hash]${timestamp}[ext]`
+          filename: (pathData) => generateFlattenedFilename(pathData, 'images')
         }
       },
       // for css
@@ -85,19 +83,17 @@ module.exports = {
           filename: 'js/[name][ext]'
         }
       },
-      // for mp4
+      // for mp4 - flattened with path in filename
       {
         test: /\.mp4$/i,
         type: 'asset/resource',
         generator: {
-          // filename: 'videos/[name]-[hash][ext]'
-          filename: `videos/[name]-[hash]${timestamp}[ext]`
+          filename: (pathData) => generateFlattenedFilename(pathData, 'videos')
         }
       },
     ],
   },
   plugins: [
-    // Build a new plugin instance for each .html file found
     new MiniCssExtractPlugin(),
     ...htmlFiles.map(htmlFile =>
       new HtmlWebpackPlugin({

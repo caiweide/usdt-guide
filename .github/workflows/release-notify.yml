@@ -24,6 +24,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           format: html
+          disable_web_page_preview: true
           message: |
             ${{ github.actor != github.repository_owner && format('FYI: @{0}
 
@@ -44,6 +45,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           format: html
+          disable_web_page_preview: true
           message: |
             ${{ github.actor != github.repository_owner && format('FYI: @{0}
 

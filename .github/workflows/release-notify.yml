@@ -6,6 +6,9 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Get commit details
         id: commit
         run: |
@@ -13,12 +16,29 @@ jobs:
           TIMESTAMP=$(TZ='Asia/Phnom_Penh' date '+%Y-%m-%d %H:%M:%S')
           PROJECT_NAME="${{ github.event.repository.name }}"
           CAPITALIZED_PROJECT="${PROJECT_NAME^}"
+
           echo "short_sha=$SHORT_SHA" >> $GITHUB_OUTPUT
           echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
           echo "project_name=$CAPITALIZED_PROJECT" >> $GITHUB_OUTPUT
 
-      - name: Send Telegram notification
-        if: success()
+      - name: Find zip file (only for zip releases)
+        id: zipfile
+        if: contains(github.event.head_commit.message, '[zip]')
+        run: |
+          # Find the faq-*.zip file
+          FAQ_ZIP=$(find . -name "faq-*.zip" -type f | head -1)
+          if [ -n "$FAQ_ZIP" ]; then
+            # Remove the ./ prefix if present
+            FAQ_ZIP=${FAQ_ZIP#./}
+            echo "faq_zip_file=$FAQ_ZIP" >> $GITHUB_OUTPUT
+            echo "Found FAQ zip file: $FAQ_ZIP"
+          else
+            echo "No faq-*.zip file found"
+            exit 1
+          fi
+
+      - name: Send regular notification (without zip)
+        if: success() && !contains(github.event.head_commit.message, '[zip]')
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -37,6 +57,24 @@ jobs:
             🕒 ${{ steps.commit.outputs.timestamp }}
 
             🔗 <a href="https://github.com/${{ github.repository }}/commit/${{ github.sha }}">Changes</a> | <a href="${{ github.event.repository.homepage }}">Live Site</a>
+
+      - name: Send Telegram notification with zip file
+        if: success() && contains(github.event.head_commit.message, '[zip]')
+        run: |
+          MESSAGE=$(cat << 'EOF'
+          ${{ github.actor != github.repository_owner && format('FYI: @{0}
+
+          ', github.repository_owner) || '' }}🚀 <b>Deployment ${{ steps.commit.outputs.project_name }} Success!!</b> ✨🎉🥳
+
+          🕒 ${{ steps.commit.outputs.timestamp }}
+          EOF
+          )
+
+          curl -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+               -F "document=@${{ steps.zipfile.outputs.faq_zip_file }}" \
+               -F "caption=${MESSAGE}" \
+               -F "parse_mode=HTML" \
+               "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument"
 
       - name: Send failure notification
         if: failure()

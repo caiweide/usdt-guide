@@ -63,6 +63,27 @@ jobs:
       - name: Send Telegram notification with zip file
         if: success() && contains(github.event.head_commit.message, '[zip]')
         run: |
+          # Check file size (Telegram limit is 50MB)
+          FILE_SIZE=$(stat -c%s "${{ steps.zipfile.outputs.project_zip_file }}")
+          MAX_SIZE=$((50 * 1024 * 1024))  # 50MB in bytes
+          FILE_SIZE_MB=$(echo "scale=1; $FILE_SIZE / 1024 / 1024" | bc)
+
+          echo "File size: ${FILE_SIZE_MB}MB"
+
+          if [ $FILE_SIZE -gt $MAX_SIZE ]; then
+            echo "File too large for Telegram (${FILE_SIZE_MB}MB > 50MB)"
+            # Send notification about large file instead
+            curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "chat_id": "${{ secrets.TELEGRAM_CHAT_ID }}",
+                   "text": "${{ github.actor != github.repository_owner && format('FYI: @{0}\n\n', github.repository_owner) || '' }}🚀 <b>Built ${{ steps.commit.outputs.project_name }} Success!!</b> ✨🎉🥳\n\n📦 File too large for Telegram ('"${FILE_SIZE_MB}"'MB > 50MB)\n🕒 ${{ steps.commit.outputs.timestamp }}",
+                   "parse_mode": "HTML"
+                 }'
+            exit 0
+          fi
+
+          # File is small enough, send with document
           MESSAGE=$(cat << 'EOF'
           ${{ github.actor != github.repository_owner && format('FYI: @{0}
 

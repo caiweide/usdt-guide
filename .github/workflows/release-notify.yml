@@ -15,25 +15,27 @@ jobs:
           SHORT_SHA=${GITHUB_SHA:0:7}
           TIMESTAMP=$(TZ='Asia/Phnom_Penh' date '+%Y-%m-%d %H:%M:%S')
           PROJECT_NAME="${{ github.event.repository.name }}"
-          CAPITALIZED_PROJECT="${PROJECT_NAME^}"
+          CAPITALIZED_PROJECT="${PROJECT_NAME^^}"
 
           echo "short_sha=$SHORT_SHA" >> $GITHUB_OUTPUT
           echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
           echo "project_name=$CAPITALIZED_PROJECT" >> $GITHUB_OUTPUT
+          echo "repo_name=$PROJECT_NAME" >> $GITHUB_OUTPUT
 
       - name: Find zip file (only for zip releases)
         id: zipfile
         if: contains(github.event.head_commit.message, '[zip]')
         run: |
-          # Find the usdt-guide-*.zip file
-          USDT_GUIDE_ZIP=$(find . -name "usdt-guide-*.zip" -type f | head -1)
-          if [ -n "$USDT_GUIDE_ZIP" ]; then
+          # Find the project-*.zip file dynamically
+          PROJECT_NAME="${{ steps.commit.outputs.repo_name }}"
+          PROJECT_ZIP=$(find . -name "${PROJECT_NAME}-*.zip" -type f | head -1)
+          if [ -n "$PROJECT_ZIP" ]; then
             # Remove the ./ prefix if present
-            USDT_GUIDE_ZIP=${USDT_GUIDE_ZIP#./}
-            echo "usdt_guide_zip_file=$USDT_GUIDE_ZIP" >> $GITHUB_OUTPUT
-            echo "Found usdt-guide zip file: $USDT_GUIDE_ZIP"
+            PROJECT_ZIP=${PROJECT_ZIP#./}
+            echo "project_zip_file=$PROJECT_ZIP" >> $GITHUB_OUTPUT
+            echo "Found project zip file: $PROJECT_ZIP"
           else
-            echo "No usdt-guide-*.zip file found"
+            echo "No ${PROJECT_NAME}-*.zip file found"
             exit 1
           fi
 
@@ -50,7 +52,7 @@ jobs:
 
             ', github.repository_owner) || '' }}🚀 <b>Deployment Success!!</b> ✨🎉🥳
 
-            📁 <a href="https://github.com/${{ github.repository }}">${{ steps.commit.outputs.project_name }}</a>
+            📁 <b>${{ steps.commit.outputs.project_name }}</b>
             👤 <b>${{ github.actor }}</b>
             💬 <i>${{ github.event.head_commit.message }}</i>
             📝 <code>${{ steps.commit.outputs.short_sha }}</code>
@@ -64,14 +66,14 @@ jobs:
           MESSAGE=$(cat << 'EOF'
           ${{ github.actor != github.repository_owner && format('FYI: @{0}
 
-          ', github.repository_owner) || '' }}🚀 <b>Deployment ${{ steps.commit.outputs.project_name }} Success!!</b> ✨🎉🥳
+          ', github.repository_owner) || '' }}🚀 <b>Built ${{ steps.commit.outputs.project_name }} Success!!</b> ✨🎉🥳
 
           🕒 ${{ steps.commit.outputs.timestamp }}
           EOF
           )
 
           curl -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-               -F "document=@${{ steps.zipfile.outputs.usdt_guide_zip_file }}" \
+               -F "document=@${{ steps.zipfile.outputs.project_zip_file }}" \
                -F "caption=${MESSAGE}" \
                -F "parse_mode=HTML" \
                "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument"
@@ -89,7 +91,7 @@ jobs:
 
             ', github.repository_owner) || '' }}❌ <b>Deployment Failed!!</b>
 
-            📁 <a href="https://github.com/${{ github.repository }}">${{ steps.commit.outputs.project_name }}</a>
+            📁 <b>${{ steps.commit.outputs.project_name }}</b>
             👤 <b>${{ github.actor }}</b>
             💬 <i>${{ github.event.head_commit.message }}</i>
             📝 <code>${{ steps.commit.outputs.short_sha }}</code>
